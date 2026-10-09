@@ -1,0 +1,46 @@
+{
+ "name": "Life OS",
+ "short_name": "Life OS",
+ "description": "نظام الإنتاجية الشخصي: مهام وعادات ونوم ومالية",
+ "lang": "ar",
+ "dir": "rtl",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#0E151C",
+ "theme_color": "#0E151C",
+ "icons": [
+  {
+   "src": "icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ],
+ "shortcuts": [
+  {
+   "name": "مهمة جديدة",
+   "url": "./?a=task"
+  },
+  {
+   "name": "تسجيل مصروف",
+   "url": "./?a=expense"
+  },
+  {
+   "name": "ملاحظة جديدة",
+   "url": "./?a=note"
+  }
+ ]
+}
