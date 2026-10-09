@@ -6,7 +6,8 @@
 <title>Life OS</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0E151C">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 
@@ -423,7 +424,7 @@ $('#cx').onclick=()=>$('#sh').classList.remove('on');
 $('#sh').onclick=e=>{if(e.target.id==='sh')$('#sh').classList.remove('on')};
 $('#ok').onclick=()=>{const v=+$('#amt').value;if(S.mode==='g'){if(isNaN(v)||v<0)return toast('أدخل رقماً صحيحاً');const p=S.pk[S.sel];p.g=v;p.goal=v>0?1:0;save();$('#sh').classList.remove('on');fin();return toast(v>0?'تم تحديث الهدف':'تم إلغاء الهدف')}if(!(v>0))return toast('أدخل مبلغاً أكبر من صفر');if(S.mode==='t'){const a=+$('#fr').value,b=+$('#to').value;if(a===b)return toast('اختر مساحتين مختلفتين');if(v>S.pk[a].a)return toast('الرصيد غير كافٍ في '+S.pk[a].n);S.pk[a].a-=v;S.pk[b].a+=v;const g=Date.now(),t=new Date().toLocaleString('ar-EG',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});S.log.push({i:a,v:-v,t,g,dk:iso(0)},{i:b,v:v,t,g,dk:iso(0)});save();$('#sh').classList.remove('on');fin();return toast('تم تحويل '+N(v)+' ج.م')}const p=S.pk[S.sel];if(S.sign<0&&v>p.a)return toast('الرصيد غير كافٍ في '+p.n);p.a+=S.sign*v;S.log.push({i:S.sel,v:S.sign*v,dk:iso(0),t:new Date().toLocaleString('ar-EG',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})});save();$('#sh').classList.remove('on');fin();toast((S.sign>0?'تمت إضافة ':'تم خصم ')+N(v)+' ج.م')};
 const NS=()=>'Notification' in window;
-async function notify(t,b){try{const g=await navigator.serviceWorker.getRegistration();if(g)return await g.showNotification(t,{body:b,icon:'icons/icon-192.png',badge:'icons/icon-192.png',dir:'rtl',lang:'ar',tag:'t-'+b,vibrate:[200,100,200]})}catch(e){}try{new Notification(t,{body:b})}catch(e){}}
+async function notify(t,b){try{const g=await navigator.serviceWorker.getRegistration();if(g)return await g.showNotification(t,{body:b,icon:'icon-192.png',badge:'icon-192.png',dir:'rtl',lang:'ar',tag:'t-'+b,vibrate:[200,100,200]})}catch(e){}try{new Notification(t,{body:b})}catch(e){}}
 const upNb=()=>{$('#nb').textContent=S.notif&&NS()&&Notification.permission==='granted'?'🔔':'🔕'};
 $('#nb').onclick=async()=>{if(!NS())return toast('الإشعارات غير مدعومة هنا. ثبّت التطبيق على الشاشة الرئيسية أولاً');if(Notification.permission==='granted')S.notif=!S.notif;else{const p=await Notification.requestPermission();S.notif=p==='granted';if(p==='denied')return toast('الإشعارات محظورة. فعّلها من إعدادات الموقع في المتصفح')}save();upNb();toast(S.notif?'تم تفعيل الإشعارات 🔔':'تم إيقاف الإشعارات');if(S.notif)notify('Life OS','الإشعارات تعمل ✅')};
 function due(){const n=new Date(),m=n.getHours()*60+n.getMinutes();S.tasks.forEach(t=>{if(t.d||t.al===iso(0)||t.dt!==iso(0))return;const[h,mi]=t.tm.split(':'),x=m-(+h*60+ +mi);if(x>=0&&x<=60){t.al=iso(0);save();toast('⏰ تذكير: '+t.t);if(S.notif&&NS()&&Notification.permission==='granted')notify('⏰ تذكير مهمة',t.t)}})}
