@@ -1065,11 +1065,11 @@ const go0=go;
 go=function(i){
  if(!NOPUSH6&&S.tab!==i&&!MAIN6.includes(i))BACK6.push(S.tab);NOPUSH6=0;
  if(MAIN6.includes(i))BACK6=[];
- go0(i);
+ const same=S.tab===i;go0(i);
  const hl={0:7,1:7,2:6,4:8}[i]??i;
  $$('nav button').forEach(b=>b.classList.toggle('on',+b.dataset.i===hl));
  $('#bkb').style.display=MAIN6.includes(i)?'none':'';$('#gr').classList.toggle('on',i===8);
- const m=$('main');if(m)m.scrollTop=0;window.scrollTo(0,0);
+ if(!same){const m=$('main');if(m)m.scrollTop=0;window.scrollTo(0,0)}
 };
 R.push(null,null,null);
 /* sync pill */
