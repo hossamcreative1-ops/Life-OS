@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Life OS</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0E151C">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF2F5;--surf:#fff;--surf2:#E3E9EE;--tx:#16222C;--mu:#6A7B88;--ac:#0F9D8A;--ac2:#6D5BD0;--warn:#D9822B;--bd:#D7DFE6;--sh:0 8px 24px rgba(30,50,70,.08);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E151C;--surf:#17212B;--surf2:#202C38;--tx:#E8EFF4;--mu:#8A9BA8;--ac:#4FD1BC;--ac2:#A394FF;--warn:#F0A04B;--bd:#273543;--sh:0 8px 24px rgba(0,0,0,.35)}}
+:root[data-theme="dark"]{--bg:#0E151C;--surf:#17212B;--surf2:#202C38;--tx:#E8EFF4;--mu:#8A9BA8;--ac:#4FD1BC;--ac2:#A394FF;--warn:#F0A04B;--bd:#273543;--sh:0 8px 24px rgba(0,0,0,.35)}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{background:var(--bg);color:var(--tx);font-family:'IBM Plex Sans Arabic',system-ui,sans-serif;display:flex;justify-content:center}
+#app{width:100%;max-width:430px;height:100%;display:flex;flex-direction:column;position:relative;background:var(--bg)}
+header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px 8px}
+header h1{font-size:22px;font-weight:700}
+header p{font-size:13px;color:var(--mu)}
+.ib{width:40px;height:40px;border-radius:50%;border:1px solid var(--bd);background:var(--surf);color:var(--tx);font-size:18px;cursor:pointer}
+main{flex:1;overflow-y:auto;padding:8px 20px 24px}
+section{display:none}section.on{display:block}
+nav{display:flex;background:var(--surf);border-top:1px solid var(--bd);padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px))}
+nav button{flex:1;background:none;border:0;color:var(--mu);font:inherit;font-size:12px;padding:6px 0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;border-radius:12px}
+nav button span{font-size:20px}
+nav button.on{color:var(--ac);font-weight:600}
+nav button:focus-visible,.ib:focus-visible,button:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+h2{font-size:16px;font-weight:600;margin:20px 0 10px}
+.total{background:linear-gradient(135deg,var(--ac2),var(--ac));color:#fff;border-radius:24px;padding:22px;box-shadow:var(--sh)}
+.total small{opacity:.85;font-size:13px}
+.total b{display:block;font-size:34px;font-weight:700;margin-top:4px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pk{background:var(--surf);border-radius:20px;padding:14px;box-shadow:var(--sh);border:1px solid var(--bd);position:relative;overflow:hidden}
+.pk::before{content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:5px;background:var(--c)}
+.pk .t{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600}
+.pk .a{font-size:19px;font-weight:700;margin:10px 0 8px}
+.pk .a small{font-size:11px;color:var(--mu);font-weight:400}
+.bar{height:6px;background:var(--surf2);border-radius:9px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--c,var(--ac));border-radius:9px;transition:width .5s}
+.row{display:flex;gap:8px;margin-top:12px}
+.row button{flex:1;border:0;border-radius:12px;padding:8px 0;font:inherit;font-weight:600;font-size:18px;cursor:pointer;background:var(--surf2);color:var(--tx)}
+.row button.p{background:var(--c);color:#fff}
+.card{background:var(--surf);border:1px solid var(--bd);border-radius:20px;padding:16px;box-shadow:var(--sh)}
+.ringwrap{display:flex;align-items:center;gap:18px}
+.ring{width:110px;height:110px;position:relative;flex:none}
+.ring svg{transform:rotate(-90deg)}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:22px}
+.ringwrap p{color:var(--mu);font-size:13px;line-height:1.7}
+.ringwrap p strong{color:var(--tx);font-size:15px}
+.gl{margin-bottom:14px}.gl:last-child{margin-bottom:0}
+.gl div{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px}
+.hb{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bd)}
+.hb:last-child{border:0}
+.hb .n{font-weight:600;font-size:14px}
+.dots{display:flex;gap:4px;margin-top:6px}
+.dots i{width:12px;height:12px;border-radius:4px;background:var(--surf2)}
+.dots i.f{background:var(--ac)}
+.st{font-size:13px;color:var(--warn);font-weight:600;margin-inline-end:10px}
+.ck{border:1.5px solid var(--ac);background:none;color:var(--ac);border-radius:10px;padding:6px 12px;font:inherit;font-size:12px;cursor:pointer}
+.ck.d{background:var(--ac);color:#fff}
+.add{display:flex;gap:8px;flex-wrap:wrap}
+select{flex:1;font:inherit;color:var(--tx);background:var(--surf2);border:1px solid var(--bd);border-radius:12px;padding:10px}
+input[type=number],input[type=date]{flex:1}
+.seg{display:flex;background:var(--surf2);border-radius:14px;padding:4px;margin:8px 0 14px}
+.seg button{flex:1;border:0;background:none;color:var(--mu);font:inherit;font-size:13px;padding:8px 0;border-radius:10px;cursor:pointer}
+.seg .on{background:var(--surf);color:var(--tx);font-weight:600;box-shadow:var(--sh)}
+.cc{position:absolute;width:150px;min-height:56px;padding:10px;background:var(--surf2);border:1.5px solid var(--bd);border-radius:14px;font-size:13px;line-height:1.6;white-space:pre-wrap;cursor:grab;user-select:none;-webkit-user-select:none;word-break:break-word}
+.cc.sel{border-color:var(--ac);box-shadow:var(--sh)}
+input,textarea{font:inherit;color:var(--tx);background:var(--surf);border:1px solid var(--bd);border-radius:14px;padding:12px;min-width:0}
+input:focus,textarea:focus{outline:2px solid var(--ac);border-color:transparent}
+.add input[type=text]{flex:1 1 100%}
+.add input[type=time]{flex:1}
+.pb{background:var(--ac);color:#fff;border:0;border-radius:14px;padding:12px 18px;font:inherit;font-weight:600;cursor:pointer}
+.task{display:flex;align-items:center;gap:12px;background:var(--surf);border:1px solid var(--bd);border-radius:16px;padding:12px 14px;margin-bottom:8px}
+.task input{width:22px;height:22px;accent-color:var(--ac);padding:0;flex:none}
+.task .x{flex:1;font-size:15px}
+.task.d .x{text-decoration:line-through;color:var(--mu)}
+.task time{font-size:12px;color:var(--ac2);background:var(--surf2);border-radius:8px;padding:3px 8px}
+.task button{background:none;border:0;color:var(--mu);font-size:18px;cursor:pointer}
+.empty{text-align:center;color:var(--mu);font-size:14px;padding:24px 0}
+textarea{width:100%;min-height:90px;resize:vertical;line-height:1.7}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:10px 0 4px}
+.chip{flex:none;border:1px solid var(--bd);background:var(--surf);color:var(--mu);border-radius:20px;padding:5px 12px;font:inherit;font-size:13px;cursor:pointer}
+.chip.on{background:var(--ac2);color:#fff;border-color:var(--ac2)}
+.note{background:var(--surf);border:1px solid var(--bd);border-radius:18px;padding:14px;margin-top:10px;line-height:1.8;font-size:14px;white-space:pre-wrap}
+.note .m{font-size:11px;color:var(--mu);margin-top:8px;display:flex;justify-content:space-between}
+a.tg{color:var(--ac2);font-weight:600;cursor:pointer}
+a.lk{color:var(--ac);border-bottom:1px dashed var(--ac);cursor:pointer}
+a.lk.no{color:var(--warn);border-color:var(--warn)}
+.sheet{position:absolute;inset:0;background:rgba(5,10,15,.55);display:none;align-items:flex-end;z-index:5}
+.sheet.on{display:flex}
+.sheet>div{width:100%;background:var(--surf);border-radius:24px 24px 0 0;padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px))}
+.sheet h3{font-size:17px;margin-bottom:12px}
+.sheet input{width:100%;font-size:22px;text-align:center}
+.q{display:flex;gap:8px;margin:12px 0}
+.q button{flex:1;border:1px solid var(--bd);background:var(--surf2);color:var(--tx);border-radius:12px;padding:9px 0;font:inherit;cursor:pointer}
+.toast{position:absolute;top:70px;inset-inline:20px;background:var(--tx);color:var(--bg);padding:12px 16px;border-radius:14px;font-size:14px;transform:translateY(-200%);opacity:0;pointer-events:none;transition:transform .3s,opacity .3s;z-index:30}
+.toast.on{transform:none;opacity:1}
+@media(min-width:900px){
+#app{max-width:none;display:grid;grid-template-columns:230px 1fr;grid-template-rows:auto 1fr}
+header{grid-column:2;grid-row:1;padding:24px 36px 8px}
+header h1{font-size:28px}
+main{grid-column:2;grid-row:2;padding:8px 36px 36px;min-width:0}
+nav{grid-column:1;grid-row:1/3;flex-direction:column;justify-content:flex-start;gap:6px;border-top:0;border-inline-end:1px solid var(--bd);padding:28px 14px}
+nav button{flex:none;flex-direction:row;gap:12px;font-size:15px;padding:12px 16px;justify-content:flex-start}
+nav button.on{background:var(--surf2)}
+.grid{grid-template-columns:repeat(3,1fr);gap:16px}
+.total{padding:28px}.total b{font-size:42px}
+.sheet{align-items:center;justify-content:center}
+.sheet>div{max-width:440px;border-radius:24px}
+.toast{max-width:440px;margin-inline:auto}
+#cvw{height:68vh!important}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+.tb{width:100%;border-collapse:collapse;font-size:13px}.tb th{text-align:start;color:var(--mu);font-weight:600;padding:8px 6px;cursor:pointer;border-bottom:1px solid var(--bd);white-space:nowrap}.tb td{padding:10px 6px;border-bottom:1px solid var(--bd)}.tb tr[data-zrow]{cursor:pointer}
+.wk{display:grid;grid-template-columns:minmax(70px,1fr) repeat(7,32px);gap:6px;align-items:center}.wk .hd{font-size:11px;text-align:center}.cl{width:32px;height:32px;border-radius:9px;border:1.5px solid var(--bd);background:var(--surf2);cursor:pointer;padding:0;color:#fff;font:inherit;font-weight:700}.cl.f{background:var(--c);border-color:var(--c)}.cl.f::after{content:"✓"}
+.cl.sm{width:24px;height:24px;border-radius:7px;font-size:12px}
+.hr{display:flex;gap:5px;margin-top:8px}.hr .cl{flex:1;width:auto;height:40px}.hl{display:flex;gap:5px;margin-top:10px}.hl span{flex:1;text-align:center;font-size:10px;font-weight:600}
+.g4{margin-top:12px;grid-template-columns:1fr 1fr!important}
+.wkc{display:block}.two{display:block}
+@media(min-width:900px){.wkc{display:flex;align-items:center;justify-content:center;gap:40px}.wkc .rr{flex:none;margin:0!important}.wkc .bc{margin:0;flex:1;max-width:560px}.two{display:grid;grid-template-columns:1fr 2fr;gap:16px;align-items:start}.add input[type=text]{flex:1 1 320px}}
+@media(min-width:900px){.wk{grid-template-columns:minmax(150px,1fr) repeat(7,minmax(44px,1fr));gap:10px 14px}.wk .cl{width:100%;max-width:72px;height:38px;justify-self:center}.wk .hd{font-size:12px}}
+.bc{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;position:relative;padding:24px 0 0;padding-inline-start:30px;height:210px;width:100%;max-width:680px;margin:0 auto}
+.bgl{position:absolute;top:24px;bottom:24px;inset-inline-start:30px;inset-inline-end:0;pointer-events:none}
+.bgl i{position:absolute;inset-inline:0;border-top:1px dashed var(--bd)}.bgl i.tg{border-color:var(--ac2);opacity:.8}
+.bgl i b{position:absolute;inset-inline-end:100%;margin-inline-end:8px;transform:translateY(-50%);font-size:10px;font-weight:400;color:var(--mu)}
+.bcol{display:flex;flex-direction:column;min-width:0;position:relative;z-index:1}
+.bt{flex:1;position:relative}
+.bb{position:absolute;bottom:0;left:0;right:0;margin:auto;width:min(100%,38px);height:var(--p);min-height:4px;border-radius:10px 10px 4px 4px;background:linear-gradient(180deg,var(--c),color-mix(in srgb,var(--c) 40%,transparent));transform-origin:bottom;animation:gr .7s cubic-bezier(.2,.8,.2,1) both;transition:filter .2s}
+.bb.z{opacity:.35;min-height:3px}.bt:hover .bb{filter:brightness(1.15)}
+.bcol.today .bb{box-shadow:0 0 18px color-mix(in srgb,var(--c) 55%,transparent)}
+.bv{position:absolute;left:0;right:0;bottom:calc(var(--p) + 5px);text-align:center;font-size:11px;font-weight:600;font-variant-numeric:tabular-nums}
+.bl{height:24px;text-align:center;font-size:11px;color:var(--mu);padding-top:7px}.bcol.today .bl{color:var(--tx);font-weight:700}
+@keyframes gr{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.tcw{padding-inline-start:30px}.pl{position:relative;height:var(--th,150px)}.pl .tc{height:100%}
+.ya span{position:absolute;inset-inline-end:100%;margin-inline-end:8px;transform:translateY(-50%);font-size:10px;color:var(--mu)}
+.dot{position:absolute;right:0;width:10px;height:10px;border-radius:50%;background:var(--ac);transform:translate(50%,-50%);box-shadow:0 0 0 4px color-mix(in srgb,var(--ac) 28%,transparent),0 0 14px var(--ac)}
+.vl,.mk,.tip{display:none;position:absolute}.vl{left:var(--x);top:0;bottom:0;border-left:1px dashed var(--mu)}
+.mk{left:var(--x);top:var(--y);width:11px;height:11px;border-radius:50%;background:var(--ac);border:2px solid var(--surf);transform:translate(-50%,-50%)}
+.tip{left:var(--x);top:2px;background:var(--tx);color:var(--bg);font-size:12px;font-weight:600;padding:4px 10px;border-radius:9px;white-space:nowrap;pointer-events:none;z-index:2}
+.pl.hv .vl,.pl.hv .mk,.pl.hv .tip{display:block}.pl.hv .dot{opacity:.0}
+.xl{display:flex;justify-content:space-between;font-size:11px;color:var(--mu);margin-top:6px}
+@media(min-width:900px){.bc{height:230px}.pl{--th:200px}}
+@media(prefers-reduced-motion:reduce){.bb{animation:none}}
+.tc{display:block;width:100%;height:150px}.tc path,.tc line{vector-effect:non-scaling-stroke}.ch{display:block;margin:0 auto;width:100%;max-width:520px}
+@media(min-width:900px){.tc{height:200px}}
+.hm>div+div{margin-top:12px}.hm>div>.card:first-child,.hm>div>.grid:first-child{margin-top:0!important}
+@media(min-width:900px){.hm{display:grid;grid-template-columns:repeat(12,1fr);gap:16px;align-items:start}.hm>div+div{margin-top:0}.c5{grid-column:span 5}.c7{grid-column:span 7}.c12{grid-column:span 12}.hm .total{padding:20px}}
+@media(min-width:900px){.g4{grid-template-columns:repeat(4,1fr)!important}}
+.seg{overflow-x:auto}.seg button{white-space:nowrap;padding:8px 12px}
+.wb{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 12px;scroll-snap-type:x proximity}
+.dc{flex:none;width:164px;background:var(--surf);border:1px solid var(--bd);border-top:4px solid var(--c);border-radius:16px;padding:10px;scroll-snap-align:center}
+.dc.today{box-shadow:0 0 0 2px var(--c),var(--sh)}
+.dc .ti{display:flex;align-items:center;gap:7px;padding:7px 8px;border-radius:10px;font-size:12px;line-height:1.5;margin-top:6px;background:var(--surf2);cursor:pointer;word-break:break-word}
+.dc .ti.d{background:color-mix(in srgb,var(--c) 30%,transparent);text-decoration:line-through;color:var(--mu)}
+.dc .ti input{width:18px;height:18px;accent-color:var(--c);flex:none;padding:0}
+.mr{position:relative;width:46px;height:46px;flex:none}.mr svg{transform:rotate(-90deg)}.mr b{position:absolute;inset:0;display:grid;place-items:center;font-size:11px}
+@media(min-width:900px){.wb{display:grid;grid-template-columns:repeat(7,1fr);overflow:visible}.dc{width:auto}}
+.pg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:8px}
+.pc{background:var(--surf);border:1px solid var(--bd);border-radius:18px;overflow:hidden;cursor:pointer}
+.pt{height:100px;background:var(--surf2) center/cover;display:flex;align-items:center;justify-content:center;font-size:30px}
+.pi{padding:10px;display:flex;flex-direction:column;gap:4px}.pi small{color:var(--mu);font-size:11px}
+.pbd{display:inline-block;font-size:11px;font-weight:700;color:var(--c);border:1px solid var(--c);border-radius:10px;padding:0 8px;width:fit-content}
+.lkr{display:flex;align-items:center;gap:8px;margin:6px 0;flex-wrap:wrap}.lkr a{color:var(--ac);word-break:break-all}
+.emb{width:100%;height:360px;border:1px solid var(--bd);border-radius:14px;margin:4px 0}
+.pgi{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+.gi{position:relative}.gi img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;cursor:zoom-in}
+.gi button{position:absolute;top:4px;left:4px;border:0;border-radius:50%;width:24px;height:24px;background:#000a;color:#fff;cursor:pointer}
+.lb{position:fixed;inset:0;background:#000e;z-index:99;display:flex;align-items:center;justify-content:center;padding:16px;cursor:zoom-out}.lb img{max-width:100%;max-height:100%;border-radius:10px}
+.note img.ai{max-width:100%;border-radius:12px;display:block;margin:8px 0}
+.ob{display:grid;grid-template-columns:1fr;gap:14px}
+.ob.open #sb{display:none}.ob:not(.open) #mn{display:none}
+.vt{display:flex;gap:6px;flex-wrap:wrap}.vt button{border:1px solid var(--bd);background:var(--surf);color:var(--tx);border-radius:10px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.sh{font-size:12px;color:var(--mu);margin:14px 0 4px;font-weight:700}.sm{font-size:12px;color:var(--mu);margin:6px 0}
+.fh{padding:6px 8px;border-radius:8px;cursor:pointer;font-size:14px;display:flex;gap:6px;align-items:center}.fh small{margin-inline-start:auto;color:var(--mu)}.fh.cur,.fh:hover{background:var(--surf2)}
+.fc{margin-inline-start:10px;border-inline-start:1px solid var(--bd);padding-inline-start:6px}
+.nr{padding:7px 8px;border-radius:8px;font-size:14px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.nr:hover,.nr.on{background:var(--surf2)}.nr.on{color:var(--ac);font-weight:700}
+.nr.sr{white-space:normal}.nr.sr small{display:block;color:var(--mu);font-size:12px;margin-top:2px}
+.cfb{display:flex;align-items:center;justify-content:space-between;background:var(--surf2);border-radius:10px;padding:4px 10px;font-size:13px;margin-bottom:6px}.cfb button{border:0;background:none;cursor:pointer;color:var(--tx);font-size:14px}
+.chips.wr{flex-wrap:wrap;overflow:visible}
+.nb{display:flex;gap:8px;align-items:center;margin-bottom:10px}.nb button{border:0;border-radius:10px;padding:8px 12px;font:inherit;font-size:14px;cursor:pointer;background:var(--surf2);color:var(--tx)}.crumb{flex:1;color:var(--mu);font-size:13px}
+.nt{font-size:26px;margin:6px 0 4px}.pr{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px}.pr small{color:var(--mu);margin-inline-start:auto}
+.rd{white-space:normal;line-height:1.9}.rd .hdg{font-weight:800;margin:14px 0 4px}.rd .h1{font-size:23px}.rd .h2{font-size:20px}.rd .h3{font-size:17px}.rd .h4,.rd .h5,.rd .h6{font-size:15px}
+.rd .sp{height:8px}.rd hr{border:0;border-top:1px solid var(--bd);margin:12px 0}
+.rd blockquote{border-inline-start:3px solid var(--ac2);margin:8px 0;padding:2px 12px;color:var(--mu)}
+.callout{border-radius:12px;padding:8px 14px;margin:10px 0;background:color-mix(in srgb,var(--c) 14%,transparent);border-inline-start:4px solid var(--c)}.callout>b{display:block;color:var(--c)}
+.rd .li{display:flex;gap:8px;align-items:baseline}.rd .bul{color:var(--mu);min-width:14px;text-align:center}.tkb{cursor:pointer;font-size:18px;color:var(--ac)}.dn{text-decoration:line-through;color:var(--mu)}
+.rd code{background:var(--surf2);padding:1px 5px;border-radius:5px;font-size:13px}.cb{background:var(--surf2);padding:10px 12px;border-radius:10px;overflow:auto;direction:ltr;text-align:left;margin:8px 0}.cb code{background:none;padding:0}
+.rd table{border-collapse:collapse;margin:8px 0;display:block;overflow:auto}.rd td,.rd th{border:1px solid var(--bd);padding:6px 10px}.rd th{background:var(--surf2)}
+.rd mark{background:#f7e26b66;color:inherit;padding:0 2px;border-radius:3px}.rd a.ex{color:var(--ac2);text-decoration:underline}.mu{color:var(--mu)}
+.tr2{border:1px dashed var(--bd);border-radius:12px;padding:6px 12px;margin:8px 0}
+a.lk.no{opacity:.65}
+.etb{display:flex;gap:4px;flex-wrap:wrap;margin:8px 0}.etb button{border:0;background:var(--surf2);color:var(--tx);border-radius:8px;padding:6px 11px;font:inherit;cursor:pointer;min-width:34px}
+.acb{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}.acb button{border:1px solid var(--bd);background:var(--surf);color:var(--ac);border-radius:14px;padding:4px 10px;font:inherit;font-size:13px;cursor:pointer}
+#eb{min-height:52vh;width:100%;line-height:1.8}
+.pn{margin-top:14px;background:var(--surf);border:1px solid var(--bd);border-radius:14px;padding:8px 12px}.pn summary{cursor:pointer;font-weight:700;font-size:14px}.bk{margin:6px 0}.bk small{display:block;color:var(--mu);font-size:12px}.ol{display:block;margin:4px 0;color:var(--ac2);cursor:pointer;font-size:14px}
+.qs{position:fixed;inset:0;background:#0009;z-index:99;display:flex;justify-content:center;padding-top:10vh}.qs>div{background:var(--surf);border:1px solid var(--bd);border-radius:16px;width:min(560px,92vw);height:fit-content;max-height:76vh;overflow:auto}.qs input{width:100%;border:0;border-bottom:1px solid var(--bd);padding:14px;font-size:16px;background:none;color:var(--tx);outline:none}.qs .qi{padding:10px 14px;cursor:pointer}.qs .qi.on{background:var(--surf2)}.qs small{color:var(--mu)}
+.gh{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px;font-size:13px;color:var(--mu)}
+.gsvg{width:100%;height:calc(100vh - 270px);min-height:340px;background:var(--surf);border:1px solid var(--bd);border-radius:18px;touch-action:none;cursor:grab}
+.ge{stroke:var(--mu);stroke-opacity:.45;stroke-width:1.2}.gn{cursor:pointer}.gt{font-size:12px;fill:var(--tx);paint-order:stroke;stroke:var(--surf);stroke-width:3px}.gt.hid{display:none}.gn:hover .gt{display:block}
+@media(min-width:900px){.ob{grid-template-columns:290px 1fr;align-items:start}.ob.open #sb,.ob:not(.open) #mn{display:block}#sb{position:sticky;top:0;max-height:calc(100vh - 170px);overflow:auto;padding-inline-end:4px}.bkm{display:none}}
+@media(min-width:1150px){.sp2{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}.sp2 .rd{display:block;margin-top:0}}
+@media(max-width:1149px){.sp2 .rd{display:none}}
+.cc.cg{background:transparent;border:2px dashed var(--bd)}.cgl{font-weight:700;color:var(--mu);font-size:14px}
+.cpv{color:var(--mu);font-size:12px;margin-top:4px;max-height:90px;overflow:hidden;white-space:normal}.cpv .p,.cpv .li{font-size:12px}
+.ob{grid-template-columns:minmax(0,1fr)}.ob>div{min-width:0}.rd{overflow-wrap:anywhere}
+a.tg{direction:ltr;unicode-bidi:isolate;display:inline-block}
+.cbw{position:relative;margin:8px 0}.cbw .cb{margin:0}.cbl{position:absolute;top:4px;left:8px;font-size:10px;color:var(--mu);direction:ltr}.cpy{position:absolute;top:4px;right:6px;border:0;background:var(--surf);color:var(--mu);border-radius:8px;padding:2px 8px;font:inherit;font-size:11px;cursor:pointer}.cbw .cb{padding-top:22px}
+.mmd{margin:10px 0;overflow:auto;text-align:center}.mmsvg svg{max-width:100%;height:auto}.mme{color:var(--mu);font-size:12px;margin-top:4px}
+@media(min-width:900px){.ob{grid-template-columns:290px minmax(0,1fr)}}
+.tour{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px}
+.tc{width:min(460px,100%);text-align:center}.tc h2{font-size:24px;margin:10px 0}.tc p{color:var(--mu);line-height:1.9;font-size:15px;margin:8px 0}.te{font-size:64px}
+.tc .pb{display:block;width:100%;margin:8px 0}.tc .pb.alt{background:var(--surf2);color:var(--tx)}
+.tl{text-align:start;background:var(--surf);border:1px solid var(--bd);border-radius:18px;padding:14px 16px;line-height:2.1;font-size:14px}.tl b{margin-inline-end:6px}
+.tdots{display:flex;gap:6px;justify-content:center;margin:18px 0}.tdots i{width:8px;height:8px;border-radius:50%;background:var(--bd)}.tdots i.on{background:var(--ac);width:22px;border-radius:6px}
+.trow{display:flex;gap:10px;align-items:center;justify-content:center}.trow .pb{width:auto;flex:1;margin:0}
+.bkr{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid var(--bd);font-size:13px}.bkr:last-child{border:0}.bkr span:last-child{display:flex;gap:6px}
+.ttr{display:flex;align-items:center;gap:10px}.ttr h1{margin:0}
+.spill{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--ac);background:color-mix(in srgb,var(--ac) 10%,transparent);border:1px solid color-mix(in srgb,var(--ac) 30%,transparent);padding:3px 10px;border-radius:99px;margin-top:4px}.spill i{width:6px;height:6px;border-radius:9px;background:currentColor}.spill.w{color:var(--warn)}
+#gr.on{color:var(--ac);border-color:var(--ac)}
+nav button span svg{display:block}
+.card.hb{padding:16px}
+.st6{display:flex;flex-direction:column;gap:10px;max-width:820px;margin:0 auto}
+.sc6{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px}.sc6 h3{font-size:16px;margin:0}.sc6 em{font-style:normal;font-size:12px;color:var(--mu)}
+.mu6{color:var(--mu);font-size:12px;display:block;margin-top:6px}.lk6{display:block;color:var(--ac);font-size:13px;font-weight:700;margin-top:10px;cursor:pointer}
+.hr6{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--bd)}.hr6:last-of-type{border:0}.hr6 b{font-size:14px;display:block}.hr6 small{color:var(--mu);font-size:12px}
+.dots6{display:flex;gap:5px}.dt6{width:24px;height:24px;border-radius:7px;border:0;background:var(--surf2);cursor:pointer;padding:0}.dt6.on{background:var(--ac)}.dt6.td{outline:2px solid color-mix(in srgb,var(--ac) 45%,transparent);outline-offset:1px}
+.dlab6{display:flex;justify-content:flex-end;gap:5px;font-size:10px;color:var(--mu);margin-bottom:2px}.dlab6 span{width:24px;text-align:center}
+.st6 textarea{width:100%;min-height:70px}
+.seg4{display:flex;background:var(--surf2);border-radius:14px;padding:4px}.seg4 button{flex:1;border:0;background:none;color:var(--mu);font:inherit;font-size:13px;padding:8px 0;border-radius:10px;cursor:pointer}.seg4 .on{background:var(--surf);color:var(--tx);font-weight:600;box-shadow:var(--sh)}
+.mini6{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.mi6{background:var(--surf2);border-radius:12px;padding:8px 10px}.mi6 small{color:var(--mu);font-size:12px;display:block}.mi6 b{font-size:18px}
+.rg6{width:76px;height:76px;display:grid;place-items:center;color:var(--mu);font-size:22px}
+.ins6{background:color-mix(in srgb,#a78bfa 12%,transparent);border:1px solid color-mix(in srgb,#a78bfa 30%,transparent);border-radius:14px;padding:10px 12px;font-size:13px;line-height:1.8;margin-bottom:10px}
+.grid6{display:grid;gap:10px}@media(min-width:900px){.grid6{grid-template-columns:1fr 1fr;align-items:start}}
+.cd6 h4{font-size:15px;display:flex;justify-content:space-between;align-items:center;margin:0 0 8px}.cd6 h4 a{font-size:12px;color:var(--ac);font-weight:600;cursor:pointer}
+.kp6{display:flex;gap:18px;margin:4px 0 10px;flex-wrap:wrap}.kp6>div{font-size:12px;color:var(--mu)}.kp6 b{display:block;color:var(--tx);font-size:18px}
+.ax6{display:flex;justify-content:space-between;color:var(--mu);font-size:11px;margin-top:4px}
+.dl{font-size:11px;font-weight:600;display:block}.dl.up{color:#2fb37a}.dl.dn{color:#e5534b}.dl6{font-size:12px;margin-top:4px;color:var(--mu)}.dl6 .dl{display:inline}.dl6 a{color:var(--ac);cursor:pointer;font-weight:600}
+.pb6{display:flex;align-items:center;gap:10px;font-size:12px;margin:9px 0}.pb6 span{width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pb6>div{flex:1;height:8px;border-radius:8px;background:var(--surf2);overflow:hidden}.pb6 i{display:block;height:100%;border-radius:8px}.pb6 em{width:48px;font-style:normal;color:var(--mu);text-align:end}
+.lkr6{display:flex;align-items:center;gap:12px;width:100%;background:none;border:0;border-bottom:1px solid var(--bd);padding:13px 0;font:inherit;color:var(--tx);cursor:pointer;text-align:start}.lkr6:last-child{border:0}.lkr6>span{font-size:20px;width:26px;text-align:center}.lkr6 div{flex:1}.lkr6 b{font-size:14px;display:block}.lkr6 small{color:var(--mu);font-size:12px}.lkr6 em{color:var(--mu);font-style:normal;font-size:18px}
+#s6 .add{flex-wrap:nowrap}#s6 .add input{flex:1;min-width:0}
+.xs7{display:flex;gap:6px;margin:6px 0 4px}.xs7 button{flex:1;border:1px solid var(--bd);background:var(--surf2);color:var(--mu);border-radius:12px;padding:7px 4px;font:inherit;font-size:12px;cursor:pointer}.xs7 .on{background:color-mix(in srgb,var(--ac) 14%,transparent);border-color:var(--ac);color:var(--tx);font-weight:600}
+.xq7{margin-bottom:10px}#s0 .xq7{margin-top:12px}
+</style>
+</head>
+<body>
+<div id="app">
+<header><div><h1 id="ttl">المالية</h1><p id="sub"></p></div><div style="display:flex;gap:8px"><button class="ib" id="sy" aria-label="المزامنة بين الأجهزة">☁</button><button class="ib" id="nb" aria-label="الإشعارات">🔕</button><button class="ib" id="lk" aria-label="قفل التطبيق">🔒</button><button class="ib" id="th" aria-label="تبديل المظهر">◐</button></div></header>
+<main>
+<section id="s0"></section>
+<section id="s1"></section>
+<section id="s2"></section>
+<section id="s3"></section>
+<section id="s4"></section>
+<section id="s5" class="on"></section>
+</main>
+<nav>
+<button class="on" data-i="5"><span>⌂</span>الرئيسية</button>
+<button data-i="2"><span>☑</span>المهام</button>
+<button data-i="3"><span>✎</span>الأفكار</button>
+<button data-i="0"><span>◍</span>المالية</button>
+<button data-i="4"><span>☰</span>المزيد</button>
+</nav>
+<div class="sheet" id="sh"><div>
+<h3 id="sht"></h3>
+<div id="tr" style="display:none;gap:8px;margin-bottom:12px"><select id="fr"></select><select id="to"></select></div>
+<input id="amt" type="number" inputmode="decimal" placeholder="المبلغ">
+<div class="q"><button data-q="50">50</button><button data-q="100">100</button><button data-q="500">500</button><button data-q="1000">1000</button></div>
+<div class="row"><button id="cx">إلغاء</button><button class="p" id="ok" style="--c:var(--ac)">تأكيد</button></div>
+</div></div>
+<div class="sheet" id="lc" style="align-items:center;background:var(--bg);z-index:20"><div style="border-radius:24px;margin:20px"><h3 id="lt"></h3><input id="pn" type="password" inputmode="numeric" maxlength="4" placeholder="••••"><div class="row"><button id="lx">إلغاء</button><button class="p" id="lo" style="--c:var(--ac)">تأكيد</button></div><button class="ck" id="lr" style="display:none;margin-top:10px">إزالة القفل</button></div></div>
+<div class="toast" id="toast"></div>
+</div>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const M=n=>S.hide?'••••':N(n);
+const N=n=>Number(n).toLocaleString('ar-EG'),P=n=>N(Math.round(n))+'٪';
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const iso=k=>{const d=new Date();d.setDate(d.getDate()-k);return d.toLocaleDateString('en-CA')};
+const run=(a,b)=>Array.from({length:b-a+1},(_,i)=>iso(a+i));
+const streak=h=>{let k=h.d.includes(iso(0))?0:1,c=0;while(h.d.includes(iso(k))){c++;k++}return c};
+const FRESH=(()=>{try{return !localStorage.getItem('lifeos2')&&!localStorage.getItem('lifeos_ob')}catch(e){return false}})();
+const S={log:[],rp:'month',sub:0,mood:'🙂',goals:[{t:'إنهاء كورس البرمجة',a:12,g:40,u:'درس'},{t:'ركض ١٠٠ كم',a:35,g:100,u:'كم'}],books:[{t:'العادات الذرية',p:120,n:320}],journal:[{d:iso(0),m:'🙂',x:'يوم هادي، خلّصت أهم مهمة وبدأت كتاب جديد.'}],
+ pk:[{n:'مدخرات',i:'🏦',a:12500,g:30000,c:'#0F9D8A',goal:1},{n:'استخدام يومي',i:'☕',a:3200,g:0,c:'#6D5BD0',daily:1},{n:'طوارئ',i:'🛟',a:8000,g:15000,c:'#D9822B',goal:1},{n:'أهداف',i:'🎯',a:4800,g:20000,c:'#D2557A',goal:1}],
+ tasks:[{t:'مراجعة ميزانية الأسبوع',tm:'10:00',d:1},{t:'مكالمة مع الفريق',tm:'14:30',d:0},{t:'قراءة ٢٠ صفحة',tm:'21:00',d:0}],
+ habits:[{n:'قراءة',d:run(1,6)},{n:'رياضة',d:[...run(1,2),iso(4),iso(6)]},{n:'ادخار يومي',d:run(1,9)}],
+ notes:[{id:'n1',ti:'فكرة تطبيق العادات',x:'تطبيق لتتبع العادات مع مكافآت صغيرة #أفكار #مشاريع',t:'٠٩:١٢'},{id:'n2',ti:'ربط الميزانية بالأهداف',x:'انظر [[فكرة تطبيق العادات]] #مالية',t:'٠٩:٤٠'}],isub:0,open:null,edit:false,cv:{cards:[{id:'c1',x:20,y:20,t:'[[فكرة تطبيق العادات]]'},{id:'c2',x:170,y:130,t:'مكافآت صغيرة'},{id:'c3',x:20,y:200,t:'#مشاريع تجريبي'}],edges:[['c1','c2'],['c1','c3']],px:0,py:0,z:1},
+ tab:0,sel:null,q:'',tag:null
+};
+try{const j=localStorage.getItem('lifeos2');if(j)Object.assign(S,JSON.parse(j))}catch(e){}
+S.notes.forEach(n=>{if(!n.id)n.id=nid();if(n.ti===undefined){const L=n.x.split('\n');n.ti=L[0].slice(0,50);n.x=L.slice(1).join('\n')}});S.lk=false;S.ce=null;S.sc=null;S.pk.forEach(p=>{if(p.n==='استخدام يومي'&&p.daily===undefined)p.daily=1});
+function nid(){return 'n'+Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
+S.sleep=S.sleep||[];S.wo=0;S.tw=0;S.sub=0;
+S.tasks.forEach(t=>{if(!t.dt)t.dt=iso(0);if(t.d&&!t.dd)t.dd=t.dt});
+const SY={ref:null,busy:0,dirty:0,t:null,applying:0,st:'off'};
+const save=()=>{if(!SY.applying)S.ts=Date.now();try{localStorage.setItem('lifeos2',JSON.stringify(S))}catch(e){if(!save.w){save.w=1;setTimeout(()=>toast('تعذّر الحفظ على الجهاز. صدّر نسخة احتياطية الآن'),0)}}syncSoon()};
+const titles=['المالية','الإنجاز','المهام','الأفكار','المزيد','الرئيسية'];
+const subs=['مساحاتك المالية في مكان واحد','تقدّمك اليوم','رتّب يومك وذكّر نفسك','ملاحظاتك المترابطة','عاداتك وأهدافك وقراءتك ويومياتك',''];
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2600)}
+const spend=(a,b)=>S.log.filter(l=>l.dk&&l.dk>=a&&l.dk<=b&&!l.g&&l.v<0&&S.pk[l.i]&&S.pk[l.i].daily).reduce((q,l)=>q-l.v,0);
+const mr=(y,m)=>{const p=y+'-'+String(m+1).padStart(2,'0');return[p+'-01',p+'-31']};
+function fin(){
+ const T=iso(0),n=new Date(),cy=n.getFullYear(),cm=n.getMonth(),yr=S.fy||cy;
+ const tot=S.pk.filter(p=>!p.daily).reduce((q,p)=>q+p.a,0),di=S.pk.findIndex(p=>p.daily),dp=S.pk[di];
+ const am=Array.from({length:12},(_,m)=>spend(...mr(yr,m))),yt=am.reduce((q,x)=>q+x,0),mx=Math.max(...am,1),mo=yr===cy?cm+1:12;
+ $('#s0').innerHTML=`<div class="total" style="position:relative"><small>إجمالي المدخرات والطوارئ والأهداف</small><b>${M(tot)} ج.م</b><button class="ib" data-e="1" aria-label="إخفاء الأرصدة" style="position:absolute;top:14px;inset-inline-end:14px;background:rgba(255,255,255,.2);border:0;color:#fff">${S.hide?'🙈':'👁'}</button></div>
+ <button class="pb" data-x="1" style="width:100%;margin-top:12px;background:var(--surf);color:var(--tx);border:1px solid var(--bd)">⇄ تحويل بين المساحات</button>
+ ${dp?`<div class="card" style="margin-top:12px;--c:${dp.c}"><div class="t" style="display:flex;gap:6px;font-weight:600">${dp.i} المصروف اليومي</div><div style="display:flex;justify-content:space-between;margin:12px 0 4px"><div><small style="color:var(--mu)">صرفت اليوم</small><div style="font-size:24px;font-weight:700;color:var(--warn)">${M(spend(T,T))} <small style="font-size:12px">ج.م</small></div></div><div style="text-align:start"><small style="color:var(--mu)">هذا الشهر</small><div style="font-size:18px;font-weight:700">${M(am[cm]&&yr===cy?am[cm]:spend(...mr(cy,cm)))}</div></div><div><small style="color:var(--mu)">المتاح</small><div style="font-size:18px;font-weight:700">${M(dp.a)}</div></div></div><div class="row"><button class="p" data-m="-${di}" style="--c:var(--warn)">− صرف</button><button data-m="${di}">+ رصيد</button></div></div>`:''}
+ <h2>مساحاتك</h2><div class="grid">${S.pk.map((p,i)=>[p,i]).filter(([p])=>!p.daily).map(([p,i])=>`<div class="pk" style="--c:${p.c}"><div class="t"><span>${p.i}</span>${p.n}<button class="ib" data-ge="${i}" aria-label="تعديل الهدف" style="margin-inline-start:auto;width:28px;height:28px;font-size:13px">✎</button></div><div class="a">${M(p.a)} <small>ج.م</small></div>${p.g?`<div class="bar"><i style="width:${Math.min(100,p.a/p.g*100)}%"></i></div>`:'<div class="bar"><i style="width:100%;opacity:.25"></i></div>'}<div class="row"><button data-m="-${i}" aria-label="خصم">−</button><button class="p" data-m="${i}" aria-label="إضافة">+</button></div></div>`).join('')}</div>
+ <h2>مصروفات السنة</h2><div class="card"><div class="hb" style="border:0;padding:0 0 10px"><div class="row" style="margin:0;align-items:center"><button data-fy="-1" aria-label="السنة السابقة" style="padding:2px 12px">›</button><b style="padding:0 8px">${N(yr).replace(/٬/g,'')}</b><button data-fy="1" aria-label="السنة التالية" style="padding:2px 12px">‹</button></div><div style="text-align:start"><b style="font-size:17px;color:var(--warn)">${M(yt)} ج.م</b><br><small style="color:var(--mu)">متوسط الشهر ${M(yt/mo)}</small></div></div>${am.map((a,m)=>`<div class="gl"><div><span>${new Date(yr,m,1).toLocaleDateString('ar-EG',{month:'long'})}${yr===cy&&m===cm?' ●':''}</span><b style="${a?'':'color:var(--mu);font-weight:400'}">${M(a)}</b></div><div class="bar" style="display:block"><i style="width:${a/mx*100}%;background:var(--warn)"></i></div></div>`).join('')}</div>
+ <h2>آخر العمليات</h2><div class="card">${S.log.length?S.log.slice(-5).reverse().map((l,k)=>`<div class="hb"><div><div class="n">${l.c?l.c+' · ':''}${S.pk[l.i].n}${l.x?' · من جيبي':''}</div><small style="color:var(--mu)">${l.t}</small></div><div><b style="color:${l.v>0?'var(--ac)':'var(--warn)'}">${l.v>0?'+':'−'}${N(Math.abs(l.v))}</b>${k===0?' <button class="ck" data-u="1">تراجع</button>':''}</div></div>`).join(''):'<div class="empty" style="padding:8px 0">لا توجد عمليات بعد. استخدم + أو − على أي مساحة.</div>'}</div>`;
+}
+function ring(pc,col,sz=110,w=11){const r=(sz-w)/2,c=2*Math.PI*r;return`<svg width="${sz}" height="${sz}"><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="var(--surf2)" stroke-width="${w}"/><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${c*(1-pc/100)}" style="transition:stroke-dashoffset .6s"/></svg>`}
+function ana(){
+ const L=S.tasks.filter(t=>t.d?t.dd===iso(0):t.dt<=iso(0)),d=L.filter(t=>t.d).length,n=L.length,pc=n?d/n*100:0;
+ const gs=S.pk.filter(p=>p.goal);
+ $('#s1').innerHTML=`<h2 style="margin-top:8px">إنجاز اليوم</h2><div class="card ringwrap"><div class="ring">${ring(pc,'var(--ac)')}<b>${P(pc)}</b></div><p><strong>${N(d)} من ${N(n)} مهام</strong><br>${n&&d===n?'أنجزت كل مهامك اليوم 🎉':'تبقّى '+N(n-d)+' للوصول إلى 100٪'}</p></div>
+ <h2>أهداف التحويش</h2><div class="card">${gs.map(p=>{const v=Math.min(100,p.a/p.g*100);return`<div class="gl" style="--c:${p.c}"><div><span>${p.i} ${p.n}</span><b>${P(v)}</b></div><div class="bar" style="display:block"><i style="width:${v}%"></i></div></div>`}).join('')}</div>
+ <h2>الالتزام والعادات</h2><div class="card">${S.habits.map((h,i)=>`<div class="hb"><div><div class="n">${h.n}</div><div class="dots" style="gap:5px">${[6,5,4,3,2,1,0].map((k,j)=>`<button class="cl sm ${h.d.includes(iso(k))?'f':''}" style="--c:${WC[j]}" data-hd="${i}:${k}" aria-label="${esc(h.n)} ${iso(k)}"></button>`).join('')}</div></div><div><span class="st">🔥 ${N(streak(h))} يوم</span><button class="ck ${h.d.includes(iso(0))?'d':''}" data-h="${i}">${h.d.includes(iso(0))?'تم اليوم ✓':'سجّل اليوم'}</button></div></div>`).join('')}<p style="font-size:12px;color:var(--mu);margin:10px 0 0">اضغط على أي مربع لتسجيل يوم فات. الأسابيع الأقدم من المزيد ← العادات.</p></div>${rep()}`;
+}
+const fd=d=>new Date(d+'T12:00').toLocaleDateString('ar-EG',{day:'numeric',month:'short',year:'numeric'});
+const rng=()=>{const n=new Date(),T=iso(0),y=n.getFullYear(),m=n.getMonth(),f=d=>d.toLocaleDateString('en-CA');if(S.rp==='today')return{a:T,b:T};if(S.rp==='7')return{a:iso(6),b:T};if(S.rp==='year')return{a:f(new Date(y,0,1)),b:T};if(S.rp==='c'&&S.ca&&S.cb)return{a:S.ca,b:S.cb};return{a:f(new Date(y,m,1)),b:T}};
+function rep(){const{a,b}=rng(),T=iso(0),inr=x=>x&&x>=a&&x<=b,e=b<T?b:T;
+ const due=S.tasks.filter(t=>inr(t.dt)),ok=due.filter(t=>t.d).length,late=due.filter(t=>!t.d&&t.dt<T).length,dn=S.tasks.filter(t=>inr(t.dd)).length,pc=due.length?ok/due.length*100:0;
+ const days=Math.max(1,Math.round((new Date(e+'T12:00')-new Date(a+'T12:00'))/864e5)+1);
+ const fl=S.log.filter(l=>inr(l.dk)&&!l.g),inn=fl.filter(l=>l.v>0).reduce((q,l)=>q+l.v,0),out=fl.filter(l=>l.v<0&&S.pk[l.i]&&S.pk[l.i].daily).reduce((q,l)=>q-l.v,0),jr=S.journal.filter(j=>inr(j.d)).length;
+ return `<h2>تقرير الفترة</h2><div class="chips">${[['today','اليوم'],['7','٧ أيام'],['month','الشهر'],['year','السنة'],['c','مخصص']].map(([k,n])=>`<button class="chip ${S.rp===k?'on':''}" data-rp="${k}">${n}</button>`).join('')}</div>${S.rp==='c'?`<div class="add" style="margin:8px 0"><input type="date" id="ra" value="${a}" aria-label="من"><input type="date" id="rb" value="${b}" aria-label="إلى"></div>`:''}
+ <div class="card"><small style="color:var(--mu)">${fd(a)} ← ${fd(b)}</small>
+ <div class="gl" style="margin-top:12px"><div><span>✅ المهام المنجزة</span><b>${N(ok)} من ${N(due.length)} · ${P(pc)}</b></div><div class="bar" style="display:block"><i style="width:${pc}%"></i></div></div>
+ <div class="hb"><span>مهام متأخرة لم تُنجز</span><b style="color:${late?'#E5534B':'var(--ac)'}">${N(late)}</b></div>
+ <div class="hb"><span>مهام أُنجزت خلال الفترة</span><b>${N(dn)}</b></div>
+ ${S.habits.map(h=>{const c=h.d.filter(x=>x>=a&&x<=e).length,v=Math.min(100,c/days*100);return`<div class="gl" style="margin-top:12px"><div><span>🔥 ${esc(h.n)}</span><b>${N(c)} من ${N(days)} يوم · ${P(v)}</b></div><div class="bar" style="display:block"><i style="width:${v}%;background:var(--ac2)"></i></div></div>`}).join('')}
+ <div class="hb"><span>إضافات مالية</span><b style="color:var(--ac)">+${N(inn)}</b></div>
+ <div class="hb"><span>المصروف اليومي</span><b style="color:var(--warn)">−${N(out)}</b></div>
+ <div class="hb" style="border:0"><span>يوميات مكتوبة</span><b>${N(jr)}</b></div></div>`}
+function tasks(){
+ const T=iso(0),all=S.tasks.map((t,i)=>[i,t]);
+ const day=all.filter(([i,t])=>t.d?t.dd===T:t.dt<=T).sort((x,y)=>(x[1].d-y[1].d)||x[1].dt.localeCompare(y[1].dt)||x[1].tm.localeCompare(y[1].tm));
+ const nxt=all.filter(([i,t])=>!t.d&&t.dt>T).sort((x,y)=>(x[1].dt+x[1].tm).localeCompare(y[1].dt+y[1].tm));
+ const row=([i,t])=>{const late=!t.d&&t.dt<T;return`<div class="task ${t.d?'d':''}"${late?' style="border-color:#E5534B"':''}><input type="checkbox" data-t="${i}" ${t.d?'checked':''} aria-label="تم"><span class="x">${esc(t.t)}${late?` <small style="color:#E5534B;font-weight:600">متأخرة · ${fd(t.dt)}</small>`:''}</span><time>⏰ ${t.tm}${t.dt>T?' · '+fd(t.dt):''}</time>${t.d?'':`<button data-r="${i}" aria-label="حذف">✕</button>`}</div>`};
+ const tw=S.tw||0,d0=new Date();d0.setDate(d0.getDate()+7*tw-((d0.getDay()+1)%7));
+ const wd=Array.from({length:7},(_,j)=>{const x=new Date(d0);x.setDate(x.getDate()+j);return x}),pw=$('.wb'),sl=pw?pw.scrollLeft:null;
+ const board=wd.map((x,j)=>{const ds=x.toLocaleDateString('en-CA'),L=all.filter(([i,t])=>t.dt===ds).sort((a,b)=>a[1].tm.localeCompare(b[1].tm)),dn=L.filter(([i,t])=>t.d).length,pc=L.length?dn/L.length*100:0;
+  return `<div class="dc ${ds===T?'today':''}" style="--c:${WC[j]}"><div style="display:flex;justify-content:space-between;align-items:center;gap:6px"><div><b style="font-size:14px">${x.toLocaleDateString('ar-EG',{weekday:'long'})}</b><div style="font-size:11px;color:var(--mu)">${x.toLocaleDateString('ar-EG',{day:'numeric',month:'short'})}</div></div><div class="mr">${ring(pc,WC[j],46,6)}<b>${N(Math.round(pc))}</b></div></div>${L.length?L.map(([i,t])=>`<label class="ti ${t.d?'d':''}"><input type="checkbox" data-t="${i}" ${t.d?'checked':''} aria-label="تم"><span>${esc(t.t)}</span></label>`).join(''):'<div style="font-size:11px;color:var(--mu);margin-top:10px">لا مهام</div>'}</div>`}).join('');
+ const wl=x=>x.toLocaleDateString('ar-EG',{day:'numeric',month:'short'});
+ $('#s2').innerHTML=`<div class="add"><input type="text" id="tt" placeholder="مهمة جديدة…"><input type="date" id="td" value="${T}" aria-label="التاريخ"><input type="time" id="tm" value="12:00" aria-label="وقت التذكير"><button class="pb" id="ta">إضافة</button></div><h2>لوحة الأسبوع</h2><div class="row" style="margin:0 0 8px;align-items:center"><button data-tw="-1" aria-label="الأسبوع السابق">›</button><span style="flex:3;text-align:center;font-size:13px;color:var(--mu)">${wl(wd[0])} ← ${wl(wd[6])}</span><button data-tw="1" aria-label="الأسبوع التالي">‹</button></div>${tw?`<button class="chip on" data-tw="r" style="margin-bottom:8px">↩ هذا الأسبوع</button>`:''}<div class="wb">${board}</div><h2>مهام اليوم</h2>${day.length?day.map(row).join(''):'<div class="empty">لا توجد مهام لليوم. أضف مهمة أعلاه.</div>'}${nxt.length?`<h2>قادمة</h2>${nxt.map(row).join('')}`:''}`;
+ const wbe=$('.wb');if(wbe){if(sl!==null)wbe.scrollLeft=sl;else{const c=$('.dc.today');if(c)c.scrollIntoView({inline:'center',block:'nearest'})}}
+ $('#ta').onclick=()=>{const v=$('#tt').value.trim();if(!v)return toast('اكتب عنوان المهمة أولاً');const dt=$('#td').value||T,tm=$('#tm').value||'12:00',n=new Date(),pass=dt<T||(dt===T&&n.getHours()*60+n.getMinutes()>=+tm.slice(0,2)*60+ +tm.slice(3,5));S.tasks.push({t:v,tm,dt,d:0,dd:null,al:pass?T:0});save();tasks();toast('تمت إضافة المهمة'+(pass?'':' وسيصلك تذكير في '+tm))}
+}
+const byTitle=t=>t&&t.trim()?S.notes.find(n=>(n.ti||'').trim().toLowerCase()===t.trim().toLowerCase()):null;
+const tagsOf=n=>[...((n.ti||'')+' '+(n.x||'')).matchAll(/(?<=^|[\s(])#([\p{L}\p{N}_]+(?:\/[\p{L}\p{N}_]+)*)/gmu)].map(m=>m[1]);
+const linksOf=n=>[...((n.ti||'')+' '+(n.x||'')).matchAll(/(!?)\[\[([^\]]+)\]\]/g)].map(m=>m[2].split('|')[0].split('#')[0].split('^')[0].trim()).filter(t=>t&&!/\.(png|jpe?g|gif|webp|bmp|avif|canvas)$/i.test(t));
+function addNote(ti){const n={id:nid(),ti,x:'',f:S.cf||'',m:Date.now(),t:new Date().toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})};S.notes.push(n);save();return n}
+function md(h){return h.replace(/^(#{1,3}) (.+)$/gm,(m,a,t)=>`<b style="display:block;font-size:${19-a.length*2}px;margin:6px 0 2px">${t}</b>`).replace(/`([^`\n]+)`/g,'<code style="background:var(--surf2);padding:1px 5px;border-radius:5px">$1</code>').replace(/\*\*([^*\n]+)\*\*/g,'<b>$1</b>').replace(/(^|[^*])\*([^*\n]+)\*/g,'$1<i>$2</i>').replace(/^- \[x\] /gm,'☑ ').replace(/^- \[ \] /gm,'☐ ').replace(/^- /gm,'• ')}
+function openNote(t){const n=byTitle(t)||addNote(t);S.open=n.id;S.edit=false;S.isub=0;if(S.tab!==3)go(3);else ideas()}
+function ideas(){
+ $('#s3').innerHTML=`<div class="seg">${[['ملاحظات',0],['رسم بياني',4],['كانفاس',1],['جدول',2],['مشاريع',3]].map(([n,i])=>`<button class="${S.isub===i?'on':''}" data-is="${i}">${n}</button>`).join('')}</div><div id="iv"></div>`;
+ S.isub===1?canvas():S.isub===2?tbl():S.isub===3?proj():S.isub===4?graph():vault();
+}
+function tbl(){
+ const K=S.tk||'u',D=S.td||-1,bl=n=>S.notes.filter(m=>m!==n&&hasLink(m,n.ti)).length;
+ const R=S.notes.map((n,i)=>({n,i,t:n.ti||'',g:tagsOf(n).join(' '),l:bl(n),w:(n.x.match(/\S+/g)||[]).length,u:i})).sort((a,b)=>(a[K]>b[K]?1:a[K]<b[K]?-1:0)*D);
+ const H=[['t','العنوان'],['g','الوسوم'],['l','↩'],['w','كلمات']];
+ $('#iv').innerHTML=`<div style="overflow-x:auto"><table class="tb"><tr>${H.map(([k,n])=>`<th data-zsort="${k}">${n}${K===k?(D>0?' ▲':' ▼'):''}</th>`).join('')}</tr>${R.map(r=>`<tr data-zrow="${r.n.id}"><td><b>${esc(r.t||'بدون عنوان')}</b></td><td>${esc(r.g.split(' ').map(t=>'#'+t).join(' ')).replace(/^#$/,'')}</td><td>${N(r.l)}</td><td>${N(r.w)}</td></tr>`).join('')}</table></div>${R.length?'':'<div class="empty">لا توجد ملاحظات.</div>'}<p style="color:var(--mu);font-size:12px">اضغط على عنوان العمود للترتيب، وعلى الصف لفتح الملاحظة.</p>`;
+}
+function list(){vault()}
+function editor(){vault()}
+function cvEdgesOld(){const C=S.cv,sz=id=>{const e=$('[data-c="'+id+'"]');return e?[e.offsetWidth/2,e.offsetHeight/2]:[75,28]};$('#cvs').innerHTML=C.edges.map(([a,b])=>{const A=C.cards.find(c=>c.id===a),B=C.cards.find(c=>c.id===b);if(!A||!B)return'';const[aw,ah]=sz(a),[bw,bh]=sz(b),ax=A.x+aw,ay=A.y+ah,bx=B.x+bw,by=B.y+bh,mx=(ax+bx)/2;return`<path d="M${ax} ${ay}C${mx} ${ay} ${mx} ${by} ${bx} ${by}" fill="none" stroke="var(--ac2)" stroke-width="2" opacity=".85"/>`}).join('')}
+function canvas(){
+ const C=CV(),cur=C.cards.find(c=>c.id===S.ce);
+ $('#iv').innerHTML=`${cvBar()}<div class="row" style="margin:0 0 8px"><button data-cn="1">📄 ملاحظة</button><button data-ca="1">+ بطاقة</button><button data-cz="1" aria-label="تكبير">＋</button><button data-cz="-1" aria-label="تصغير">－</button></div><div id="cvw" style="position:relative;height:58vh;overflow:hidden;border:1px solid var(--bd);border-radius:18px;background-color:var(--surf);background-image:radial-gradient(var(--bd) 1px,transparent 1px);background-size:22px 22px;touch-action:none"><div id="cvi" style="position:absolute;left:0;top:0;transform-origin:0 0;transform:translate(${C.px}px,${C.py}px) scale(${C.z})"><svg id="cvs" width="1" height="1" style="position:absolute;left:0;top:0;overflow:visible;pointer-events:none"></svg>${C.cards.slice().sort((a,b)=>!!b.g-!!a.g).map(c=>`<div class="cc ${c.g?'cg':''} ${S.sc===c.id?'sel':''}" data-c="${c.id}" style="left:${c.x}px;top:${c.y}px${cst(c)}">${cardH(c)}</div>`).join('')}</div></div><div class="row" style="${S.sc?'':'display:none'}"><button data-ce="1">✎ تعديل</button><button data-cl="1" style="${S.lk?'background:var(--ac2);color:#fff':''}">🔗 ${S.lk?'اختر البطاقة…':'ربط'}</button><button data-cd="1">🗑 حذف</button></div>${cur?`<textarea id="cet" style="margin-top:8px;min-height:80px" placeholder="نص البطاقة… يدعم #وسم و [[رابط]]">${esc(cur.t)}</textarea><button class="pb" data-cx="1" style="width:100%;margin-top:6px">تم</button>`:''}<p style="color:var(--mu);font-size:12px;margin-top:8px">اسحب الخلفية للتحريك، واسحب البطاقة لنقلها، واضغط عليها لاختيارها.</p>`;
+ cvEdges();
+ if(cur)$('#cet').oninput=e=>{cur.t=e.target.value;save();$('[data-c="'+cur.id+'"]').innerHTML=cardH(cur);cvEdges()};
+ const w=$('#cvw');let m=null;
+ w.onpointerdown=e=>{const el=e.target.closest('.cc');m={c:el&&C.cards.find(k=>k.id===el.dataset.c),x:e.clientX,y:e.clientY,mv:0,t:e.target};if(w.setPointerCapture)w.setPointerCapture(e.pointerId)};
+ w.onpointermove=e=>{if(!m)return;const dx=e.clientX-m.x,dy=e.clientY-m.y;if(Math.abs(dx)+Math.abs(dy)>3)m.mv=1;m.x=e.clientX;m.y=e.clientY;if(m.c&&m.mv){m.c.x+=dx/C.z;m.c.y+=dy/C.z;const el=$('[data-c="'+m.c.id+'"]');el.style.left=m.c.x+'px';el.style.top=m.c.y+'px';cvEdges()}else if(!m.c){C.px+=dx;C.py+=dy;$('#cvi').style.transform=`translate(${C.px}px,${C.py}px) scale(${C.z})`}};
+ w.onpointerup=w.onpointercancel=()=>{if(!m)return;const k=m;m=null;save();if(k.mv)return;const a=k.t.closest&&k.t.closest('[data-l]');if(a)return openNote(a.dataset.l);const c=k.c;if(S.lk&&S.sc&&c&&c.id!==S.sc){const i=C.edges.findIndex(([p,q])=>(p===S.sc&&q===c.id)||(q===S.sc&&p===c.id));if(i>=0)C.edges.splice(i,1);else C.edges.push([S.sc,c.id]);S.lk=false;save()}else S.sc=c?c.id:null;if(!c)S.lk=false;canvas()};
+}
+const SUB=['العادات','النوم','الأهداف','القراءة','اليوميات','النسخ'],MO=['😄','🙂','😐','😔','😡'];
+const stp=g=>Math.max(1,Math.round(g.g/10));
+const bak0=()=>`<h2>بياناتك ملكك</h2><div class="card"><p style="margin:0 0 10px;font-size:14px;line-height:1.8">كل شيء محفوظ على جهازك فقط. صدّر نسخة بشكل دوري، وبها تنقل بياناتك لأي جهاز أو تحتفظ بها في مكان آمن.</p><p style="margin:0 0 12px;font-size:13px;color:var(--mu)">${S.lb?'آخر نسخة: '+new Date(S.lb).toLocaleDateString('ar-EG',{day:'numeric',month:'long'}):'لم تُصدّر نسخة بعد.'}</p><button class="pb" data-zexp="1" style="width:100%;margin-bottom:8px">تصدير نسخة كاملة</button><button class="pb" data-zmd="1" style="width:100%;margin-bottom:8px;background:var(--surf2);color:var(--tx)">تصدير الملاحظات بصيغة Markdown</button><button class="pb" data-zimp="1" style="width:100%;background:var(--surf2);color:var(--tx)">استيراد نسخة من ملف</button></div>${window.claude&&claude.use?'':`<h2>المزامنة مع حساب Google</h2><div class="card"><p style="margin:0 0 10px;font-size:13px;color:var(--mu);line-height:1.8">سجّل بحساب Google على أي جهاز وبياناتك تظهر. بتتخزن في مساحة التطبيق المخفية داخل Google Drive الخاصة بيك، ومفيش تطبيق تاني يقدر يقراها.</p>${gOn()?`<p style="margin:0 0 10px;font-size:13px;color:var(--ac)">المزامنة مفعّلة عبر Google Drive ✓</p><button class="pb" data-zgr="1" style="width:100%;background:var(--surf2);color:var(--tx)">إيقاف المزامنة على هذا الجهاز</button>`:`${GCLIENT?'':'<input id="gi" type="text" dir="ltr" placeholder="Google Client ID" style="width:100%;font-size:12px;margin-bottom:8px" value="'+esc(gid())+'">'}<button class="pb" data-zgs="1" style="width:100%">متابعة بحساب Google</button>`}</div>`}<h2>نقل بالنص (لو الملفات مش شغالة)</h2><div class="card"><p style="margin:0 0 10px;font-size:13px;color:var(--mu);line-height:1.8">من الجهاز القديم: اضغط «عرض النسخة كنص» وانسخ الكل. على الجهاز الجديد: الصق النص هنا واضغط «استيراد من النص».</p><textarea id="bk" placeholder="النسخة تظهر أو تُلصق هنا" style="min-height:110px;font-size:12px;direction:ltr"></textarea><div class="row"><button data-ztx="1">عرض النسخة كنص</button><button class="p" data-zpi="1" style="--c:var(--ac)">استيراد من النص</button></div></div>`;
+function barCh(items,o){const mx=o.max,g=o.grid||[0,50,100];
+ return `<div class="bc"><div class="bgl">${g.map(v=>`<i class="${v===o.target?'tg':''}" style="bottom:${v/mx*100}%"><b>${N(v)}</b></i>`).join('')}</div>${items.map(it=>`<div class="bcol ${it.today?'today':''}"><div class="bt" title="${esc(it.t||'')}" style="--p:${it.v/mx*100}%;--c:${it.c}"><span class="bv">${it.v?N(it.v):''}</span><div class="bb ${it.v?'':'z'}"></div></div><div class="bl">${it.l}</div></div>`).join('')}</div>`}
+function areaCh(pts,id){const n=pts.length,X=j=>j*300/(n-1),Y=v=>(100-v)*.86+6;
+ let d=`M${X(0)} ${Y(pts[0])}`;for(let j=1;j<n;j++){const cx=(X(j-1)+X(j))/2;d+=`C${cx} ${Y(pts[j-1])} ${cx} ${Y(pts[j])} ${X(j)} ${Y(pts[j])}`}
+ return `<div class="tcw" data-pts="${pts.join(',')}"><div class="pl"><div class="ya">${[100,50,0].map(v=>`<span style="top:${Y(v)}%">${N(v)}</span>`).join('')}</div><svg class="tc" viewBox="0 0 300 100" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--ac);stop-opacity:.4"/><stop offset="1" style="stop-color:var(--ac);stop-opacity:0"/></linearGradient></defs>${[0,50,100].map(v=>`<line x1="0" x2="300" y1="${Y(v)}" y2="${Y(v)}" style="stroke:var(--bd)" stroke-dasharray="2 5"/>`).join('')}<path d="${d}L300 ${Y(0)}L0 ${Y(0)}Z" fill="url(#${id})"/><path d="${d}" fill="none" stroke="var(--ac)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><i class="dot" style="top:${Y(pts[n-1])}%"></i><i class="vl"></i><i class="mk"></i><div class="tip"></div></div><div class="xl"><span>اليوم</span><span>من ${N(n)} يوم</span></div></div>`}
+document.addEventListener('pointermove',e=>{const pl=e.target.closest&&e.target.closest('.pl');$$('.pl.hv').forEach(x=>{if(x!==pl)x.classList.remove('hv')});if(!pl)return;const pts=pl.parentNode.dataset.pts.split(',').map(Number),r=pl.getBoundingClientRect(),f=Math.min(1,Math.max(0,(e.clientX-r.left)/r.width)),i=Math.round(f*(pts.length-1)),k=pts.length-1-i,x=i/(pts.length-1)*100,y=(100-pts[i])*.86+6,tp=pl.querySelector('.tip');
+ pl.classList.add('hv');pl.style.setProperty('--x',x+'%');pl.style.setProperty('--y',y+'%');tp.textContent=(k?new Date(iso(k)+'T12:00').toLocaleDateString('ar-EG',{day:'numeric',month:'short'}):'اليوم')+' · '+N(pts[i])+'٪';tp.style.transform=x<14?'translateX(0)':x>86?'translateX(-100%)':'translateX(-50%)'});
+document.addEventListener('pointerout',e=>{const pl=e.target.closest&&e.target.closest('.pl');if(pl&&!(e.relatedTarget&&pl.contains(e.relatedTarget)))pl.classList.remove('hv')});
+const WC=['#6D5BD0','#4C7BE0','#0F9D8A','#3DBE6B','#C9B21F','#D9822B','#D95B5B'];
+const hab=()=>{
+ const wo=S.wo||0,days=[6,5,4,3,2,1,0].map(k=>k+7*wo),n=S.habits.length,dn=k=>new Date(iso(k)+'T12:00').toLocaleDateString('ar-EG',{weekday:'short'}),sd=k=>new Date(iso(k)+'T12:00').toLocaleDateString('ar-EG',{day:'numeric',month:'short'});
+ const pc=k=>n?Math.round(S.habits.filter(h=>h.d.includes(iso(k))).length/n*100):0;
+ const vals=days.map(pc),wk=Math.round(vals.reduce((a,b)=>a+b,0)/7),td=pc(0);
+ const ring=(v,c,l)=>{const r=34,C=2*Math.PI*r;return `<div style="text-align:center"><svg width="86" height="86" viewBox="0 0 86 86" role="img" aria-label="${l} ${v}%"><circle cx="43" cy="43" r="${r}" fill="none" stroke="var(--surf2)" stroke-width="9"/><circle cx="43" cy="43" r="${r}" fill="none" stroke="${c}" stroke-width="9" stroke-linecap="round" stroke-dasharray="${C*v/100} ${C}" transform="rotate(-90 43 43)"/><text x="43" y="48" text-anchor="middle" style="font-size:16px;font-weight:700;fill:var(--tx)">${N(v)}٪</text></svg><div style="font-size:12px;color:var(--mu)">${l}</div></div>`};
+ const bars=barCh(vals.map((v,j)=>({v,l:dn(days[j]),c:WC[j],t:dn(days[j])+': '+N(v)+'٪',today:days[j]===0})),{max:100,grid:[0,50,100]});
+ const M=30,X=j=>10+j*260/(M-1),Y=v=>78-v*.64,pt=Array.from({length:M},(_,j)=>pc(M-1-j));
+ let d=`M${X(0)} ${Y(pt[0])}`;for(let j=1;j<M;j++){const cx=(X(j-1)+X(j))/2;d+=`C${cx} ${Y(pt[j-1])} ${cx} ${Y(pt[j])} ${X(j)} ${Y(pt[j])}`}
+ const avg=Math.round(pt.reduce((a,b)=>a+b,0)/M);
+ const area=areaCh(pt,'ag');
+ return `<div class="add"><input type="text" id="f1" placeholder="عادة جديدة… مثل: شرب الماء"><button class="pb" id="fa">إضافة</button></div>
+ <h2>لوحة الأسبوع</h2><div class="card"><div class="wkc"><div class="rr" style="display:flex;justify-content:space-around;gap:20px;margin-bottom:10px">${ring(td,'var(--ac)','اليوم')}${ring(wk,'var(--ac2)','متوسط الأسبوع')}</div>${bars}</div></div>
+ <h2>اتجاه ٣٠ يوم <small style="color:var(--mu);font-weight:400;font-size:12px">المتوسط ${N(avg)}٪</small></h2><div class="card">${area}</div>
+ <h2>جدول العادات</h2><div class="row" style="margin:0 0 10px;align-items:center"><button data-wo="1" aria-label="الأسبوع السابق">›</button><span style="flex:3;text-align:center;font-size:13px;color:var(--mu)">${sd(6+7*wo)} ← ${sd(7*wo)}</span><button data-wo="-1" aria-label="الأسبوع التالي" ${wo?'':'disabled style="opacity:.4"'}>‹</button></div>${wo?`<button class="chip on" data-wo="r" style="margin-bottom:10px">↩ الرجوع لهذا الأسبوع</button>`:''}<p style="font-size:12px;color:var(--mu);margin:0 0 8px">اضغط على أي مربع لتسجيل يوم فات أو إلغائه.</p><div class="card">${n?`<div class="wk"><span></span>${days.map((k,j)=>`<span class="hd" style="color:${WC[j]};font-weight:600">${dn(k)}</span>`).join('')}${S.habits.map((h,i)=>`<div class="n" style="font-size:14px;font-weight:600;min-width:0;overflow-wrap:anywhere">${esc(h.n)}<div style="font-size:11px;color:var(--warn);font-weight:600">🔥 ${N(streak(h))} <a data-hx="${i}" aria-label="حذف العادة" style="color:var(--mu);cursor:pointer;margin-inline-start:6px">✕</a></div></div>${days.map((k,j)=>`<button class="cl ${h.d.includes(iso(k))?'f':''}" style="--c:${WC[j]}" data-hd="${i}:${k}" aria-label="${esc(h.n)} ${dn(k)}"></button>`).join('')}`).join('')}</div>`:'<div class="empty">أضف أول عادة.</div>'}</div>`};
+const goals=()=>`<div class="add"><input type="text" id="f1" placeholder="هدف جديد"><input type="number" id="f2" placeholder="الرقم المستهدف" inputmode="numeric"><input type="text" id="f3" placeholder="الوحدة (كم، درس…)" style="flex:1 1 40%"><button class="pb" id="fa">إضافة</button></div><h2>أهدافي</h2>${S.goals.length?S.goals.map((g,i)=>{const v=Math.min(100,g.a/g.g*100);return`<div class="card" style="margin-bottom:10px"><div class="hb" style="border:0;padding:0 0 8px"><b>${esc(g.t)}${v>=100?' 🏆':''}</b><b>${P(v)}</b></div><div class="bar"><i style="width:${v}%"></i></div><div class="hb" style="border:0;padding:10px 0 0"><small style="color:var(--mu)">${N(g.a)} / ${N(g.g)} ${esc(g.u||'')}</small><div class="row" style="margin:0"><button data-gm="${i}" style="padding:4px 14px">−</button><button class="p" data-gp="${i}" style="--c:var(--ac);padding:4px 14px">+${N(stp(g))}</button><button data-gx="${i}" style="padding:4px 12px;font-size:14px">✕</button></div></div></div>`}).join(''):'<div class="empty">حدّد أول هدف.</div>'}`;
+const books=()=>`<div class="add"><input type="text" id="f1" placeholder="اسم الكتاب أو الكورس"><input type="number" id="f2" placeholder="العدد الكلي" inputmode="numeric"><input type="text" id="f3" placeholder="الوحدة: فيديو، صفحة، درس…" style="flex:1 1 100%"><button class="pb" id="fa">إضافة</button></div><h2>قراءتي</h2>${S.books.length?S.books.map((b,i)=>{const v=Math.min(100,b.p/b.n*100);return`<div class="card" style="margin-bottom:10px"><div class="hb" style="border:0;padding:0 0 8px"><b>📖 ${esc(b.t)}${v>=100?' ✅':''}</b><b>${P(v)}</b></div><div class="bar"><i style="width:${v}%;background:var(--ac2)"></i></div><div class="hb" style="border:0;padding:10px 0 0;flex-wrap:wrap;gap:8px"><small style="color:var(--mu)">${esc(b.u||'صفحة')} ${N(b.p)} من ${N(b.n)} <a class="lk" data-bu="${i}" aria-label="تغيير الوحدة" style="cursor:pointer">↻</a></small><div class="row" style="margin:0"><button data-bp="${i}:-1" style="padding:4px 10px;font-size:14px" aria-label="تراجع">−١</button>${(b.n>=100?[1,10,30]:[1,5]).map(k=>`<button class="p" data-bp="${i}:${k}" style="--c:var(--ac2);padding:4px 10px;font-size:14px">+${N(k)}</button>`).join('')}<button data-bx="${i}" style="padding:4px 12px;font-size:14px">✕</button></div></div></div>`}).join(''):'<div class="empty">أضف أول كتاب.</div>'}`;
+const jour=()=>`<div class="chips">${MO.map(m=>`<button class="chip ${S.mood===m?'on':''}" data-mo="${m}" style="font-size:20px" aria-label="المزاج">${m}</button>`).join('')}</div><textarea id="f1" placeholder="يومك في سطرين…"></textarea><button class="pb" id="fa" style="width:100%;margin-top:8px">حفظ اليومية</button><h2>يومياتي</h2>${S.journal.length?S.journal.map((j,i)=>[i,j]).reverse().map(([i,j])=>`<div class="note"><b>${j.m} ${new Date(j.d+'T12:00').toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long'})}</b>\n${esc(j.x)}<div class="m"><span></span><a data-jx="${i}" style="cursor:pointer">حذف</a></div></div>`).join(''):'<div class="empty">لا توجد يوميات بعد.</div>'}`;
+const ADD=[
+()=>{const v=$('#f1').value.trim();if(!v)return toast('اكتب اسم العادة');S.habits.push({n:v,d:[]});save();more();toast('تمت إضافة العادة')},
+()=>{const v=$('#f1').value.trim(),g=+$('#f2').value;if(!v||!(g>0))return toast('اكتب الهدف ورقماً مستهدفاً');S.goals.push({t:v,a:0,g,u:$('#f3').value.trim()});save();more();toast('تمت إضافة الهدف')},
+()=>{const v=$('#f1').value.trim(),n=+$('#f2').value;if(!v||!(n>0))return toast('اكتب الاسم وعدد الصفحات');S.books.push({t:v,p:0,n,u:$('#f3').value.trim()||'صفحة'});save();more();toast('تمت الإضافة لقراءتك')},
+()=>{const v=$('#f1').value.trim();if(!v)return toast('اكتب يوميتك أولاً');S.journal.push({d:iso(0),m:S.mood||'🙂',x:v});save();more();toast('تم حفظ اليومية')}];
+const slp=()=>{
+ const days=[6,5,4,3,2,1,0],g=k=>{const e=S.sleep.find(x=>x.d===iso(k));return e?e.h:0},vs=days.map(g),lg=vs.filter(v=>v>0),avg=lg.length?lg.reduce((a,b)=>a+b,0)/lg.length:0;
+ const col=v=>v>=7?'#3DBE6B':v>=6?'#D9822B':'#D95B5B',Y=v=>84-v*6.4,dn=k=>new Date(iso(k)+'T12:00').toLocaleDateString('ar-EG',{weekday:'short'});
+ const bars=barCh(vs.map((v,j)=>({v,l:dn(days[j]),c:col(v),t:dn(days[j])+': '+N(v)+' ساعة',today:days[j]===0})),{max:10,grid:[0,4,8],target:8});
+ const rec=S.sleep.slice().sort((a,b)=>b.d.localeCompare(a.d)).slice(0,7);
+ return `<div class="add"><input type="number" id="f1" step="0.5" min="0" max="24" inputmode="decimal" placeholder="ساعات النوم، مثل ٧٫٥"><input type="date" id="f2" value="${iso(0)}" max="${iso(0)}" aria-label="تاريخ الاستيقاظ"><button class="pb" id="fa">حفظ</button></div>
+ <div class="two"><div><h2>نومي</h2><div class="card ringwrap"><div class="ring" style="width:96px;height:96px">${ring(Math.min(100,avg/8*100),'#6D5BD0',96,10)}<b style="font-size:17px">${N(avg.toFixed(1))}</b></div><p><strong>متوسط ${N(avg.toFixed(1))} ساعة</strong><br>${!lg.length?'سجّل أول ليلة لتظهر الإحصائية':avg>=7?'نومك ضمن المعدل الجيد 👌':'أقل من الموصى به، الهدف ٧–٨ ساعات'}</p></div>
+ </div><div><h2>آخر ٧ أيام</h2><div class="card">${bars}</div></div></div>
+ <h2>السجل</h2><div class="card">${rec.length?rec.map(e=>`<div class="hb"><span>${new Date(e.d+'T12:00').toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'short'})}</span><div><b style="color:${col(e.h)}">${N(e.h)} ساعة</b> <button class="ck" data-zsl="${e.d}" aria-label="حذف" style="border-color:var(--bd);color:var(--mu)">✕</button></div></div>`).join(''):'<div class="empty">لا يوجد سجل نوم بعد.</div>'}</div>`};
+ADD.splice(1,0,()=>{const v=+$('#f1').value,d=$('#f2').value||iso(0);if(!(v>0&&v<=24))return toast('اكتب عدد ساعات صحيح');const i=S.sleep.findIndex(x=>x.d===d);if(i>=0)S.sleep[i].h=v;else S.sleep.push({d,h:v});save();more();toast('تم تسجيل النوم')});
+const hpc=k=>S.habits.length?Math.round(S.habits.filter(h=>h.d.includes(iso(k))).length/S.habits.length*100):0;
+function home(){
+ const T=iso(0),nw=new Date(),dnm=k=>new Date(iso(k)+'T12:00').toLocaleDateString('ar-EG',{weekday:'short'}),wkd=[6,5,4,3,2,1,0];
+ $('#ttl').textContent=nw.getHours()<12?'صباح الخير':'مساء الخير';$('#sub').textContent=nw.toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long'});
+ const L=S.tasks.map((t,i)=>[i,t]).filter(([i,t])=>t.d?t.dd===T:t.dt<=T),dn=L.filter(([i,t])=>t.d).length,n=L.length,pc=n?dn/n*100:0;
+ const sh=L.slice().sort((a,b)=>(a[1].d-b[1].d)||a[1].tm.localeCompare(b[1].tm)).slice(0,5);
+ const hv=wkd.map(hpc),ha=Math.round(hv.reduce((a,b)=>a+b,0)/7);
+ const sv=S.sleep.filter(e=>e.d>=iso(6)&&e.d<=T).map(e=>e.h),sa=sv.length?sv.reduce((a,b)=>a+b,0)/sv.length:0;
+ const late=S.tasks.filter(t=>!t.d&&t.dt<T).length,mo=spend(...mr(nw.getFullYear(),nw.getMonth()));
+ const MM=30,X=j=>j*300/(MM-1),Y=v=>86-v*.7,pt=Array.from({length:MM},(_,j)=>hpc(MM-1-j));
+ let d=`M${X(0)} ${Y(pt[0])}`;for(let j=1;j<MM;j++){const cx=(X(j-1)+X(j))/2;d+=`C${cx} ${Y(pt[j-1])} ${cx} ${Y(pt[j])} ${X(j)} ${Y(pt[j])}`}
+ const av=Math.round(pt.reduce((a,b)=>a+b,0)/MM);
+ const tr=areaCh(pt,'hg');
+ const st=(l,v,sub,c)=>`<div class="pk" style="--c:${c}"><div class="t">${l}</div><div class="a">${v}</div><small style="color:var(--mu);font-size:12px">${sub}</small></div>`;
+ const gs=S.pk.filter(p=>p.goal);
+ $('#s5').innerHTML=`<div class="hm"><div class="c5"><div class="card"><div class="ringwrap"><div class="ring" style="width:104px;height:104px">${ring(pc,'var(--ac)',104,11)}<b>${P(pc)}</b></div><p><strong>${N(dn)} من ${N(n)} مهام</strong><br>${n&&dn===n?'أنجزت كل مهامك اليوم 🎉':n?'تبقّى '+N(n-dn)+' للوصول إلى 100٪':'لا مهام لليوم، أضف مهمة من تبويب المهام'}</p></div>${sh.map(([i,t])=>`<div class="task ${t.d?'d':''}"><input type="checkbox" data-t="${i}" ${t.d?'checked':''} aria-label="تم"><span class="x">${esc(t.t)}</span><time>⏰ ${t.tm}</time></div>`).join('')}<button class="chip on" data-gt="2" style="margin-top:10px">كل المهام ←</button></div></div>
+ <div class="c7"><div class="card"><b style="font-size:16px">عادات الأسبوع</b><div class="hl">${wkd.map((k,j)=>`<span style="color:${WC[j]}">${dnm(k)}</span>`).join('')}</div>${S.habits.length?S.habits.map((h,i)=>`<div style="margin-top:12px"><div style="display:flex;justify-content:space-between;font-size:14px;font-weight:600"><span>${esc(h.n)}</span><span style="color:var(--warn);font-size:13px">🔥 ${N(streak(h))} يوم</span></div><div class="hr">${wkd.map((k,j)=>`<button class="cl ${h.d.includes(iso(k))?'f':''}" style="--c:${WC[j]}" data-hd="${i}:${k}" aria-label="${esc(h.n)} ${dnm(k)}"></button>`).join('')}</div></div>`).join(''):'<div class="empty">أضف أول عادة من المزيد ← العادات.</div>'}<p style="font-size:12px;color:var(--mu);margin-top:12px">اضغط على أي مربع لتسجيل يوم فات. الأسابيع الأقدم من المزيد ← العادات.</p></div></div>
+ <div class="c12"><div class="grid g4">${st('متوسط العادات',P(ha),'هذا الأسبوع','var(--ac)')}${st('متوسط النوم',sv.length?N(sa.toFixed(1))+' س':'—','الهدف ٨ ساعات','var(--ac2)')}${st('مهام متأخرة',N(late),'من أيام سابقة','#E5534B')}${st('مصروف اليوم',M(spend(T,T))+' ج.م','هذا الشهر '+M(mo),'var(--warn)')}</div></div>
+ <div class="c7"><div class="card"><div style="display:flex;justify-content:space-between"><b style="font-size:16px">اتجاه العادات ٣٠ يوم</b><span style="font-size:13px;color:var(--ac)">المتوسط ${P(av)}</span></div>${tr}</div></div>
+ <div class="c5"><div class="card hb" style="border:1px solid var(--bd)"><div><small style="color:var(--mu)">إجمالي المدخرات</small><div style="font-size:22px;font-weight:700;letter-spacing:2px;margin-top:4px">••••••</div></div><button class="pb" data-gt="0" style="background:var(--surf2);color:var(--tx)">عرض المالية</button></div>
+ <h2>أهداف التحويش</h2><div class="card">${gs.map(p=>{const v=Math.min(100,p.a/p.g*100);return`<div class="gl" style="--c:${p.c}"><div><span>${p.i} ${p.n}</span><b>${P(v)}</b></div><div class="bar" style="display:block"><i style="width:${v}%"></i></div></div>`}).join('')}</div></div>
+ <div class="c12">${rep()}</div></div>`;
+}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-gt]');if(t)go(+t.dataset.gt)});
+function more(){$('#s4').innerHTML=`<div class="seg">${SUB.map((n,i)=>`<button class="${S.sub===i?'on':''}" data-s="${i}">${n}</button>`).join('')}</div>`+[hab,slp,goals,books,jour,bak][S.sub]();const fa=$('#fa');if(fa)fa.onclick=ADD[S.sub]}
+const R=[fin,ana,tasks,ideas,more,home];
+document.addEventListener('change',e=>{if(e.target.id==='ra'||e.target.id==='rb'){S.ca=$('#ra').value;S.cb=$('#rb').value;save();S.tab===5?go(5):ana()}});
+function go(i){S.tab=i;$$('section').forEach((s,j)=>s.classList.toggle('on',j===i));$$('nav button').forEach(b=>b.classList.toggle('on',+b.dataset.i===i));$('#ttl').textContent=titles[i];$('#sub').textContent=subs[i];R[i]()}
+$$('nav button').forEach(b=>b.onclick=()=>go(+b.dataset.i));
+$('#th').onclick=()=>{const d=document.documentElement,cur=d.dataset.theme||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');d.dataset.theme=cur==='dark'?'light':'dark'};
+document.addEventListener('click',e=>{
+ const t=e.target.closest('[data-m],[data-h],[data-r],[data-g],[data-l],[data-d],[data-q],[data-fy],[data-bu],[data-is],[data-nn],[data-o],[data-bk],[data-ed],[data-dn],[data-ca],[data-cz],[data-ce],[data-cl],[data-cd],[data-cx],[data-rp],[data-ge],[data-u],[data-e],[data-x],[data-s],[data-hx],[data-gm],[data-gp],[data-gx],[data-bp],[data-bx],[data-mo],[data-jx]');if(!t)return;
+ const D=t.dataset;
+ if(D.m!==undefined){const v=+D.m,i=Math.abs(v);S.mode='m';$('#tr').style.display='none';S.sel=i;S.sign=D.m.startsWith('-')?-1:1;$('#sht').textContent=(S.sign>0?'إضافة إلى ':'خصم من ')+S.pk[i].n;$('#amt').value='';$('#sh').classList.add('on');$('#amt').focus()}
+ else if(D.u){let l=S.log.pop();if(l){do{if(!l.x)S.pk[l.i].a-=l.v}while(l.g&&S.log.length&&S.log[S.log.length-1].g===l.g&&(l=S.log.pop()));save();fin();toast('تم التراجع عن العملية')}}
+ else if(D.s!==undefined){S.sub=+D.s;more()}
+ else if(D.hx!==undefined){S.habits.splice(+D.hx,1);save();more()}
+ else if(D.gm!==undefined){const g=S.goals[+D.gm];g.a=Math.max(0,g.a-stp(g));save();more()}
+ else if(D.gp!==undefined){const g=S.goals[+D.gp];g.a=Math.min(g.g,g.a+stp(g));save();more();if(g.a>=g.g)toast('🏆 حققت هدفك!')}
+ else if(D.gx!==undefined){S.goals.splice(+D.gx,1);save();more()}
+ else if(D.bp!==undefined){const[i,k]=D.bp.split(':'),b=S.books[+i];b.p=Math.min(b.n,Math.max(0,b.p+ +k));save();more();if(b.p>=b.n)toast('✅ أنهيت الكتاب!')}
+ else if(D.bu!==undefined){const b=S.books[+D.bu],U=['صفحة','فيديو','درس','ساعة'];b.u=U[(U.indexOf(b.u||'صفحة')+1)%U.length];save();more()}
+ else if(D.bx!==undefined){S.books.splice(+D.bx,1);save();more()}
+ else if(D.mo){const x=$('#f1').value;S.mood=D.mo;more();$('#f1').value=x}
+ else if(D.jx!==undefined){S.journal.splice(+D.jx,1);save();more()}
+ else if(D.e){S.hide=!S.hide;save();fin()}
+ else if(D.x){S.mode='t';$('#sht').textContent='تحويل بين المساحات';const o=S.pk.map((p,i)=>`<option value="${i}">${p.n}</option>`).join('');$('#fr').innerHTML=o;$('#to').innerHTML=o;$('#to').value=1;$('#tr').style.display='flex';$('#amt').value='';$('#sh').classList.add('on')}
+ else if(D.ge!==undefined){S.mode='g';S.sel=+D.ge;const p=S.pk[S.sel];$('#sht').textContent='الهدف المستهدف لـ '+p.n+' (0 لإلغائه)';$('#tr').style.display='none';$('#amt').value=p.g||'';$('#sh').classList.add('on')}
+ else if(D.rp){S.rp=D.rp;if(D.rp==='c'){S.ca=S.ca||iso(30);S.cb=S.cb||iso(0)}save();S.tab===5?go(5):ana()}
+ else if(D.fy){S.fy=(S.fy||new Date().getFullYear())+ +D.fy;save();fin()}
+ else if(D.q)$('#amt').value=(+$('#amt').value||0)+ +D.q;
+ else if(D.h!==undefined){const h=S.habits[+D.h];const t=iso(0);if(!h.d.includes(t)){h.d.push(t);toast('🔥 سلسلة '+N(streak(h))+' يوم، استمر!')}else h.d=h.d.filter(x=>x!==t);save();go(S.tab)}
+ else if(D.r!==undefined){S.tasks.splice(+D.r,1);save();S.tab===6?go(6):tasks()}
+ else if(D.g!==undefined){S.tag=D.g||null;S.open=null;S.isub=0;if(S.tab!==3)go(3);else ideas()}
+ else if(D.l!==undefined)openNote(D.l)
+ else if(D.is!==undefined){S.isub=+D.is;ideas()}
+ else if(D.nn){const n=addNote('');S.open=n.id;S.edit=true;S.isub=0;ideas();$('#et').focus()}
+ else if(D.o){S.open=D.o;S.edit=false;ideas()}
+ else if(D.bk){S.open=null;ideas()}
+ else if(D.ed){S.edit=!S.edit;ideas()}
+ else if(D.dn){S.notes=S.notes.filter(n=>n.id!==D.dn);S.open=null;save();ideas()}
+ else if(D.ca){const C=CV(),id=nid();C.cards.push({id,x:Math.round(-C.px/C.z+30+(C.cards.length%5)*18),y:Math.round(-C.py/C.z+30+(C.cards.length%5)*18),t:'فكرة جديدة'});S.sc=id;S.ce=id;save();canvas()}
+ else if(D.cz){const C=CV();C.z=Math.min(2,Math.max(.4,Math.round((C.z+ +D.cz*.2)*10)/10));save();canvas()}
+ else if(D.ce){S.ce=S.sc;canvas()}
+ else if(D.cx){S.ce=null;canvas()}
+ else if(D.cl){S.lk=!S.lk;if(S.lk)toast('اضغط على البطاقة المراد ربطها');canvas()}
+ else if(D.cd){const C=CV();C.cards=C.cards.filter(c=>c.id!==S.sc);C.edges=C.edges.filter(([p,q])=>p!==S.sc&&q!==S.sc);S.sc=null;S.ce=null;S.lk=false;save();canvas()}
+});
+document.addEventListener('change',e=>{const c=e.target.closest('[data-t]');if(c){const tk=S.tasks[+c.dataset.t];tk.d=c.checked?1:0;tk.dd=c.checked?iso(0):null;save();S.tab===5||S.tab===6?go(S.tab):tasks();toast(c.checked?'أحسنت! تم تحديث مؤشر الإنجاز':'أُعيدت المهمة')}});
+$('#cx').onclick=()=>$('#sh').classList.remove('on');
+$('#sh').onclick=e=>{if(e.target.id==='sh')$('#sh').classList.remove('on')};
+$('#ok').onclick=()=>{const v=+$('#amt').value;if(S.mode==='g'){if(isNaN(v)||v<0)return toast('أدخل رقماً صحيحاً');const p=S.pk[S.sel];p.g=v;p.goal=v>0?1:0;save();$('#sh').classList.remove('on');fin();return toast(v>0?'تم تحديث الهدف':'تم إلغاء الهدف')}if(!(v>0))return toast('أدخل مبلغاً أكبر من صفر');if(S.mode==='t'){const a=+$('#fr').value,b=+$('#to').value;if(a===b)return toast('اختر مساحتين مختلفتين');if(v>S.pk[a].a)return toast('الرصيد غير كافٍ في '+S.pk[a].n);S.pk[a].a-=v;S.pk[b].a+=v;const g=Date.now(),t=new Date().toLocaleString('ar-EG',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});S.log.push({i:a,v:-v,t,g,dk:iso(0)},{i:b,v:v,t,g,dk:iso(0)});save();$('#sh').classList.remove('on');fin();return toast('تم تحويل '+N(v)+' ج.م')}const p=S.pk[S.sel];if(S.sign<0&&v>p.a)return toast('الرصيد غير كافٍ في '+p.n);p.a+=S.sign*v;S.log.push({i:S.sel,v:S.sign*v,dk:iso(0),t:new Date().toLocaleString('ar-EG',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})});save();$('#sh').classList.remove('on');fin();toast((S.sign>0?'تمت إضافة ':'تم خصم ')+N(v)+' ج.م')};
+const NS=()=>'Notification' in window;
+async function notify(t,b){try{const g=await navigator.serviceWorker.getRegistration();if(g)return await g.showNotification(t,{body:b,icon:'icon-192.png',badge:'icon-192.png',dir:'rtl',lang:'ar',tag:'t-'+b,vibrate:[200,100,200]})}catch(e){}try{new Notification(t,{body:b})}catch(e){}}
+const upNb=()=>{$('#nb').textContent=S.notif&&NS()&&Notification.permission==='granted'?'🔔':'🔕'};
+$('#nb').onclick=async()=>{if(!NS())return toast('الإشعارات غير مدعومة هنا. ثبّت التطبيق على الشاشة الرئيسية أولاً');if(Notification.permission==='granted')S.notif=!S.notif;else{const p=await Notification.requestPermission();S.notif=p==='granted';if(p==='denied')return toast('الإشعارات محظورة. فعّلها من إعدادات الموقع في المتصفح')}save();upNb();toast(S.notif?'تم تفعيل الإشعارات 🔔':'تم إيقاف الإشعارات');if(S.notif)notify('Life OS','الإشعارات تعمل ✅')};
+function due(){const n=new Date(),m=n.getHours()*60+n.getMinutes();S.tasks.forEach(t=>{if(t.d||t.al===iso(0)||t.dt!==iso(0))return;const[h,mi]=t.tm.split(':'),x=m-(+h*60+ +mi);if(x>=0&&x<=60){t.al=iso(0);save();toast('⏰ تذكير: '+t.t);if(S.notif&&NS()&&Notification.permission==='granted')notify('⏰ تذكير مهمة',t.t)}})}
+setInterval(due,20000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)due()});upNb();due();
+const H=async x=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode('lifeos'+x)))].map(b=>b.toString(16).padStart(2,'0')).join('');
+let LM='';
+function lock(m){LM=m;$('#lc').classList.add('on');$('#pn').value='';$('#lt').textContent=m==='u'?'أدخل رمز القفل':'اختر رمزاً من ٤ أرقام';$('#lx').style.display=m==='u'?'none':'';$('#lr').style.display=(m==='s'&&S.pin)?'':'none';$('#pn').focus()}
+$('#lk').onclick=()=>lock('s');
+$('#lx').onclick=()=>$('#lc').classList.remove('on');
+$('#lr').onclick=()=>{S.pin=null;save();$('#lc').classList.remove('on');toast('تم إزالة القفل')};
+$('#lo').onclick=async()=>{const v=$('#pn').value.replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d));if(!/^\d{4}$/.test(v))return toast('الرمز يتكون من ٤ أرقام');let h;try{h=await H(v)}catch(e){return toast('القفل غير متاح في هذا المتصفح')}if(LM==='u'){if(h===S.pin)$('#lc').classList.remove('on');else{toast('رمز غير صحيح');$('#pn').value=''}}else{S.pin=h;save();$('#lc').classList.remove('on');toast('تم تفعيل القفل')}};
+if(S.pin)lock('u');
+go(5);
+(()=>{const a=new URLSearchParams(location.search).get('a');if(!a)return;
+ if(a==='expense'){go(0);const di=S.pk.findIndex(p=>p.daily),b=di>=0&&$('[data-m="-'+di+'"]');if(b)b.click()}
+ else if(a==='task'){go(2);$('#tt').focus()}
+ else if(a==='note'){S.open=null;S.isub=0;go(3);const b=$('[data-nn]');if(b)b.click()}
+ else if(a==='habit'){S.sub=0;go(4)}
+ try{history.replaceState(null,'',location.pathname)}catch(e){}})();
+
+async function zdl(n,t,m){try{if(window.claude&&claude.use){const dl=await claude.use('downloads');if(dl){await dl.save({filename:n,data:t});return}}}catch(e){if(e&&e.code==='declined')return}const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:m}));a.download=n;document.body.appendChild(a);a.click();a.remove()}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-zrow],[data-zsort],[data-zexp],[data-zmd],[data-zimp],[data-ztx],[data-zpi],[data-zxg],[data-zxs],[data-zxr],[data-zgs],[data-zgr]');if(!t)return;const D=t.dataset;
+ if(D.zrow){S.open=D.zrow;S.edit=false;S.isub=0;ideas()}
+ else if(D.zsort){S.td=(S.tk||'u')===D.zsort?-(S.td||-1):1;S.tk=D.zsort;save();ideas()}
+ else if(D.zexp){S.lb=Date.now();save();zdl('life-os-backup-'+iso(0)+'.json',JSON.stringify(S),'application/json');more();toast('تم تصدير النسخة')}
+ else if(D.zmd){zdl('life-os-notes-'+iso(0)+'.md',S.notes.map(n=>'# '+(n.ti||'بدون عنوان')+'\n\n'+n.x).join('\n\n---\n\n'),'text/markdown');toast('تم تصدير الملاحظات')}
+ else if(D.zxg){const u=$('#xu').value.trim().replace(/\/+$/,'');if(!/^https:\/\/.+/.test(u))return toast('اكتب رابط قاعدة Firebase يبدأ بـ https://');const b=new Uint8Array(16);crypto.getRandomValues(b);$('#xc').value=u+'#'+[...b].map(x=>x.toString(16).padStart(2,'0')).join('');$('#xc').select();toast('انسخ الكود واحتفظ به، وبعدها اضغط تفعيل')}
+ else if(D.zxs){const v=$('#xc').value.trim(),i=v.lastIndexOf('#'),u=v.slice(0,i),k=v.slice(i+1);if(i<0||!/^https:\/\//.test(u)||k.length<16)return toast('الكود غير صالح');try{localStorage.setItem('lifeos_sync',JSON.stringify({url:u,key:k}))}catch(e){return toast('تعذّر الحفظ')}toast('تم التفعيل، بيتم الاتصال…');setTimeout(()=>location.reload(),600)}
+ else if(D.zxr){if(!confirm('إيقاف المزامنة على هذا الجهاز؟ بياناتك تفضل محفوظة هنا.'))return;try{localStorage.removeItem('lifeos_sync')}catch(e){}location.reload()}
+ else if(D.zgs){const v=GCLIENT||($('#gi')&&$('#gi').value.trim())||'';if(!/\.apps\.googleusercontent\.com$/.test(v))return toast('اكتب Google Client ID صحيح');try{localStorage.setItem('lifeos_gid',v)}catch(e){}
+  if(!(window.google&&google.accounts&&google.accounts.oauth2)){loadGsi().then(()=>toast('جاهز، اضغط مرة تانية'),()=>toast('تعذّر الاتصال بـ Google. تأكد من النت'));return}
+  gToken(true).then(()=>{try{localStorage.setItem('lifeos_g','1')}catch(e){}toast('تم تسجيل الدخول، بيتم الاتصال…');setTimeout(()=>location.reload(),600)},()=>toast('لم يتم تسجيل الدخول'))}
+ else if(D.zgr){if(!confirm('إيقاف المزامنة على هذا الجهاز؟ بياناتك تفضل محفوظة هنا وعلى Drive.'))return;try{localStorage.removeItem('lifeos_g')}catch(e){}location.reload()}
+ else if(D.ztx){const t=$('#bk');t.value=JSON.stringify(snapS());t.focus();t.select();try{navigator.clipboard.writeText(t.value).then(()=>toast('تم نسخ البيانات'),()=>toast('حدّد الكل وانسخه يدويًا'))}catch(x){toast('حدّد الكل وانسخه يدويًا')}}
+ else if(D.zpi){try{const d=JSON.parse($('#bk').value.trim());if(!d||!Array.isArray(d.notes)||!Array.isArray(d.pk))throw 0;if(!confirm('سيتم استبدال بياناتك الحالية بالنسخة الملصوقة. متابعة؟'))return;try{localStorage.setItem('lifeos2_pre_import',JSON.stringify(S))}catch(e){}for(const k of Object.keys(d))if(!LOC.includes(k))S[k]=d[k];S.sleep=S.sleep||[];S.lk=false;S.ce=null;S.sc=null;S.open=null;save();go(S.tab||0);toast('تم الاستيراد وهيتزامن مع جهازك التاني')}catch(x){toast('النص غير صالح. انسخ النسخة كاملة من الجهاز القديم')}}
+ else if(D.zimp){const f=document.createElement('input');f.type='file';f.accept='.json,application/json';f.onchange=()=>{const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d||!Array.isArray(d.notes)||!Array.isArray(d.pk))throw 0;if(!confirm('سيتم استبدال بياناتك الحالية بالنسخة المستوردة. متابعة؟'))return;Object.assign(S,d);S.lk=false;S.ce=null;S.sc=null;S.open=null;save();go(S.tab||0);toast('تم استيراد النسخة')}catch(x){toast('الملف غير صالح. اختر نسخة Life OS بصيغة JSON')}};r.readAsText(f.files[0])};f.click()}
+});
+document.addEventListener('click',e=>{const t=e.target.closest('[data-hd]');if(!t)return;const[i,k]=t.dataset.hd.split(':'),h=S.habits[+i],d=iso(+k);h.d=h.d.includes(d)?h.d.filter(x=>x!==d):[...h.d,d];save();go(S.tab)});
+document.addEventListener('click',e=>{const t=e.target.closest('[data-wo],[data-tw],[data-zsl]');if(!t)return;const D=t.dataset;
+ if(D.wo!==undefined){S.wo=D.wo==='r'?0:Math.max(0,(S.wo||0)+ +D.wo);save();more()}
+ else if(D.tw!==undefined){S.tw=D.tw==='r'?0:(S.tw||0)+ +D.tw;save();tasks()}
+ else if(D.zsl){S.sleep=S.sleep.filter(x=>x.d!==D.zsl);save();more()}
+});
+
+/* ---- Obsidian import + Projects ---- */
+S.pj=S.pj||[];S.att=S.att||{};
+const IMG=/\.(png|jpe?g|gif|webp|bmp|avif)$/i;
+const base=p=>{let s=String(p).split('?')[0];try{s=decodeURIComponent(s)}catch(e){}return s.split('/').pop().split('\\').pop()};
+function AK(n){return S.att[n]?n:Object.keys(S.att).find(k=>k.toLowerCase()===n.toLowerCase())}
+function imgs(h){return h.replace(/!\[\[([^\]]+)\]\]/g,(m,n)=>{const k=AK(n.trim());return k?`<img class="ai" src="${S.att[k]}">`:`<span style="color:var(--mu)">\u{1F5BC} ${n}</span>`}).replace(/!\[[^\]]*\]\((https?:\/\/[^)\s]+)\)/g,'<img class="ai" src="$1">')}
+function shrink(blob,max=1100,q=.72){return new Promise((ok,no)=>{const u=URL.createObjectURL(blob),im=new Image();im.onload=()=>{const r=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(im.width*r));c.height=Math.max(1,Math.round(im.height*r));const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);ok(c.toDataURL('image/jpeg',q))};im.onerror=()=>{URL.revokeObjectURL(u);no(new Error('img'))};im.src=u})}
+function attSize(){return Object.values(S.att).reduce((a,v)=>a+v.length,0)}
+async function putImg(blob,key){const d=await shrink(blob);if(attSize()+d.length>3.2e6){toast('مساحة الصور على الجهاز خلصت — صدّر نسخة احتياطية وقلل الصور');return null}S.att[key]=d;return key}
+async function unzip(file){
+ const b=new Uint8Array(await file.arrayBuffer()),v=new DataView(b.buffer),td=new TextDecoder();
+ let e=b.length-22;while(e>=0&&v.getUint32(e,true)!==0x06054b50)e--;if(e<0)throw new Error('zip');
+ const n=v.getUint16(e+10,true);let o=v.getUint32(e+16,true);const out=[];
+ for(let i=0;i<n;i++){
+  if(v.getUint32(o,true)!==0x02014b50)break;
+  const m=v.getUint16(o+10,true),cs=v.getUint32(o+20,true),nl=v.getUint16(o+28,true),el=v.getUint16(o+30,true),cl=v.getUint16(o+32,true),lo=v.getUint32(o+42,true),name=td.decode(b.subarray(o+46,o+46+nl));
+  o+=46+nl+el+cl;
+  if(name.endsWith('/'))continue;
+  const data=async()=>{const ln=v.getUint16(lo+26,true),le=v.getUint16(lo+28,true),s=lo+30+ln+le,raw=b.subarray(s,s+cs);if(m===0)return raw;if(m!==8)throw new Error('zip method');const ds=new Blob([raw]).stream().pipeThrough(new DecompressionStream('deflate-raw'));return new Uint8Array(await new Response(ds).arrayBuffer())};
+  out.push({p:name,text:async()=>td.decode(await data()),blob:async()=>new Blob([await data()])});
+ }
+ return out}
+async function collect(files){const out=[];for(const f of files){if(/\.zip$/i.test(f.name)){try{out.push(...await unzip(f))}catch(e){toast('تعذّر فتح ملف ZIP')}}else out.push({p:f.webkitRelativePath||f.name,text:()=>f.text(),blob:async()=>f})}return out}
+function obs(txt,folder){
+ let tags=[];txt=txt.replace(/^﻿/,'').replace(/\r\n?/g,'\n');
+ const fm=txt.match(/^---\n([\s\S]*?)\n---\n?/);
+ if(fm){txt=txt.slice(fm[0].length);const L=fm[1].split('\n'),i=L.findIndex(l=>/^tags?\s*:/i.test(l));
+  if(i>=0){const v=L[i].replace(/^tags?\s*:/i,'').trim();if(v)tags=v.replace(/^\[|\]$/g,'').split(/[,\s]+/);else for(let j=i+1;j<L.length&&/^\s*-\s*/.test(L[j]);j++)tags.push(L[j].replace(/^\s*-\s*/,''))}}
+ const tg=t=>t.replace(/^#/,'').replace(/["']/g,'').trim().replace(/[\/\s-]+/g,'_');
+ tags=tags.map(tg).filter(Boolean);if(folder)tags.push(tg(folder));
+ txt=txt.replace(/%%[\s\S]*?%%/g,'').replace(/==([^=\n]+)==/g,'$1').replace(/ \^[\w-]+$/gm,'')
+  .replace(/!\[[^\]]*\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g,(m,u)=>/^https?:/i.test(u)?m:'![['+base(u)+']]')
+  .replace(/!\[\[([^\]|#]+?)(?:#[^\]|]*)?(?:\|[^\]]*)?\]\]/g,(m,n)=>IMG.test(n.trim())?'![['+base(n.trim())+']]':'![['+n.trim().split('/').pop().replace(/\.md$/i,'')+']]')
+  
+  .replace(/(?<!!)\[\[([^\]]+)\]\]/g,(m,i)=>{const [a,...al]=i.split('|');const t=a.split('#')[0].split('^')[0].trim().split('/').pop().replace(/\.md$/i,'');return t?'[['+t+(al.length?'|'+al.join('|'):'')+']]':''});
+ if(tags.length)txt=txt.trimEnd()+'\n\n'+[...new Set(tags)].map(t=>'#'+t).join(' ');
+ return txt.trim()}
+async function obsImport(files){
+ toast('جاري القراءة…');
+ let E=(await collect(files)).filter(e=>!e.p.split('/').some(s=>s[0]==='.'));
+ const roots=new Set(E.map(e=>e.p.split('/')[0]));
+ if(roots.size===1&&E.every(e=>e.p.includes('/')))E.forEach(e=>e.p=e.p.slice(e.p.indexOf('/')+1));
+ const mds=E.filter(e=>/\.(md|markdown|txt)$/i.test(e.p)),im={};E.filter(e=>IMG.test(e.p)).forEach(e=>im[base(e.p).toLowerCase()]=e);
+ let add=0,skip=0,ni=0,miss=0;const used=new Map();
+ for(const e of mds){
+  const parts=e.p.split('/'),title=parts.pop().replace(/\.(md|markdown|txt)$/i,'').trim(),folder=parts.length?parts[parts.length-1]:'';
+  if(!title)continue;if(byTitle(title)){skip++;continue}
+  const x=obs(await e.text(),'');
+  for(const m of x.matchAll(/!\[\[([^\]]+)\]\]/g))used.set(m[1].trim().toLowerCase(),m[1].trim());
+  S.notes.push({id:nid(),ti:title,x,f:parts.join('/'),m:Date.now(),t:new Date().toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})});add++}
+ for(const [lk,k] of used){if(AK(k))continue;const e=im[lk];if(!e){miss++;continue}try{if(await putImg(await e.blob(),k))ni++;else break}catch(err){miss++}}
+ let nc=0;for(const ce of E.filter(x=>/\.canvas$/i.test(x.p))){try{if(await impCanvas(ce,im))nc++}catch(er){}}
+ S.q='';S.tag='';S.isub=nc&&!add?1:0;if(nc&&!add)S.cc=S.cvs[S.cvs.length-1].id;S.open=null;save();if(S.tab!==3)go(3);else ideas();
+ toast((nc?(add?'':'تم استيراد ')+N(nc)+' كانفاس'+(add?' + ':''):'')+(nc&&!add&&!skip?'':add?`تم استيراد ${N(add)} ملاحظة`+(ni?` و${N(ni)} صورة`:'')+(skip?` · تخطّيت ${N(skip)} موجودة`:'')+(miss?` · ${N(miss)} صورة مش لاقيها`:''):(skip?'كل الملاحظات موجودة قبل كده':'ملقيتش ملفات Markdown')))}
+function pick(o,cb){const i=document.createElement('input');i.type='file';Object.assign(i,o);i.style.display='none';document.body.appendChild(i);i.onchange=()=>{const f=[...i.files];i.remove();if(f.length)cb(f)};i.oncancel=()=>i.remove();i.click()}
+let PY=null,PE=false,PF=-1,EMB=-1;
+const PST=['فكرة','شغّال','خلص'],PCL=['#D9822B','#4C7BE0','#3DBE6B'];
+const embU=u=>u+(u.includes('?')?'&':'?')+'embed';
+function proj(){
+ const P=S.pj;if(PY){const p=P.find(x=>x.id===PY);if(p)return pdet(p);PY=null}
+ const l=P.filter(p=>PF<0||(p.s||0)===PF);
+ $('#iv').innerHTML=`<div class="chips"><button class="chip ${PF<0?'on':''}" data-y="f" data-yi="-1">الكل (${N(P.length)})</button>${PST.map((n,i)=>`<button class="chip ${PF===i?'on':''}" data-y="f" data-yi="${i}">${n} (${N(P.filter(p=>(p.s||0)===i).length)})</button>`).join('')}</div><button class="pb" data-y="new" style="width:100%;margin:6px 0">+ مشروع جديد</button>${l.length?`<div class="pg">${l.map(p=>{const c=(p.im||[])[0],has=c&&S.att[c];return `<div class="pc" data-y="o" data-yi="${p.id}"><div class="pt" ${has?`style="background-image:url(${S.att[c]})"`:''}>${has?'':'\u{1F5C2}'}</div><div class="pi"><b>${esc(p.n||'بدون اسم')}</b><span class="pbd" style="--c:${PCL[p.s||0]}">${PST[p.s||0]}</span><small>${N((p.im||[]).length)} صورة · ${N((p.lk||[]).length)} رابط</small></div></div>`}).join('')}</div>`:'<div class="empty">مفيش مشاريع هنا. ضيف أول مشروع.</div>'}`;
+}
+function pdet(p){
+ const nm=(p.n||'').trim(),nt=nm?S.notes.filter(n=>hasLink(n,nm)||tagsOf(n).includes(nm.replace(/[\s\/-]+/g,'_'))):[],lk=p.lk||[],im=p.im||[];
+ $('#iv').innerHTML=`<div class="row" style="margin:0 0 10px"><button data-y="bk">→ رجوع</button><button data-y="ed">${PE?'✓ تم':'✎ تحرير'}</button><button data-y="del" aria-label="حذف">\u{1F5D1}</button></div>
+ ${PE?`<input id="pn" value="${esc(p.n||'')}" placeholder="اسم المشروع" style="width:100%;font-weight:700;font-size:17px"><select id="ps" style="width:100%;margin-top:8px">${PST.map((n,i)=>`<option value="${i}" ${(p.s||0)===i?'selected':''}>${n}</option>`).join('')}</select><textarea id="pd" style="min-height:110px;margin-top:8px" placeholder="وصف المشروع، الخطوات، ملاحظات…">${esc(p.d||'')}</textarea>`:`<h2 style="margin:6px 0">${esc(p.n||'بدون اسم')} <span class="pbd" style="--c:${PCL[p.s||0]}">${PST[p.s||0]}</span></h2>${p.d?`<div class="note" style="margin:0">${esc(p.d)}</div>`:''}`}
+ <h2>الروابط (Canva / Drive / Behance…)</h2>
+ ${lk.map((k,i)=>`<div class="lkr"><a href="${esc(k.u)}" target="_blank" rel="noopener">\u{1F517} ${esc(k.l||k.u)}</a>${/canva\.com/i.test(k.u)?`<button class="chip" data-y="emb" data-yi="${i}">${EMB===i?'إخفاء':'عرض هنا'}</button>`:''}${PE?`<button class="chip" data-y="dl" data-yi="${i}">✕</button>`:''}</div>${EMB===i?`<iframe class="emb" src="${esc(embU(k.u))}" allowfullscreen loading="lazy"></iframe>`:''}`).join('')||'<div class="empty" style="padding:8px 0">لسه مفيش روابط.</div>'}
+ <div class="row" style="margin-top:8px;flex-wrap:wrap"><input id="pl" placeholder="اسم الرابط" style="flex:1 1 120px"><input id="pu" dir="ltr" placeholder="https://…" style="flex:2 1 180px"><button class="pb" data-y="al">إضافة</button></div>
+ <h2>الصور والتصاميم (${N(im.length)})</h2>
+ <div class="pgi">${im.map((k,i)=>S.att[k]?`<div class="gi"><img src="${S.att[k]}" data-y="zoom" data-yi="${esc(k)}" alt="">${PE?`<button data-y="di" data-yi="${i}">✕</button>`:''}</div>`:'').join('')}</div>
+ <button class="pb" data-y="ai" style="width:100%;margin-top:8px;background:var(--surf2);color:var(--tx)">+ إضافة صور (Export من Canva مثلاً)</button>
+ <h2>ملاحظات المشروع (${N(nt.length)})</h2>${nt.map(n=>`<a class="lk" data-l="${esc(n.ti)}" style="display:block;margin:6px 0">↗ ${esc(n.ti)}</a>`).join('')}
+ <div style="font-size:12px;color:var(--mu);margin:6px 0">اكتب [[${esc(nm||'اسم المشروع')}]] أو #${esc((nm||'اسم_المشروع').replace(/[\s\/-]+/g,'_'))} في أي ملاحظة وتظهر هنا.</div>
+ <button class="pb" data-y="pn" style="width:100%;background:var(--surf2);color:var(--tx)">+ ملاحظة للمشروع</button>`;
+ if(PE){$('#pn').oninput=e=>{p.n=e.target.value;save()};$('#ps').onchange=e=>{p.s=+e.target.value;save()};$('#pd').oninput=e=>{p.d=e.target.value;save()}}
+}
+document.addEventListener('click',async e=>{
+ const t=e.target.closest('[data-y]');if(!t)return;const a=t.dataset.y,i=t.dataset.yi,p=S.pj.find(x=>x.id===PY);
+ if(a==='obs')pick(i==='2'?{webkitdirectory:true,multiple:true}:{multiple:true},obsImport);
+ else if(a==='ni'){pick({multiple:true},async f=>{const ta=$('#eb');if(!ta)return;let add='';for(const x of f){if(!/^image\//.test(x.type))continue;try{const k=await putImg(x,'img-'+nid()+'.jpg');if(k)add+='\n![['+k+']]\n'}catch(er){}}if(add){const n=S.notes.find(m=>m.id===S.open),s=ta.selectionStart??ta.value.length;ta.value=ta.value.slice(0,s)+add+ta.value.slice(s);n.x=ta.value;save();toast('تمت إضافة الصورة')}})}
+ else if(a==='f'){PF=+i;proj()}
+ else if(a==='new'){const q={id:nid(),n:'',s:1,d:'',lk:[],im:[]};S.pj.push(q);PY=q.id;PE=true;save();proj();const n=$('#pn');if(n)n.focus()}
+ else if(a==='o'){PY=i;PE=false;EMB=-1;proj()}
+ else if(a==='bk'){PY=null;proj()}
+ else if(!p&&a!=='zoom')return;
+ else if(a==='ed'){PE=!PE;proj()}
+ else if(a==='del'){if(confirm('حذف المشروع وصوره؟')){(p.im||[]).forEach(k=>delete S.att[k]);S.pj=S.pj.filter(x=>x!==p);PY=null;save();proj()}}
+ else if(a==='al'){const l=$('#pl').value.trim();let u=$('#pu').value.trim();if(!u)return toast('اكتب الرابط');if(!/^https?:\/\//i.test(u))u='https://'+u;(p.lk=p.lk||[]).push({l,u});save();proj()}
+ else if(a==='dl'){p.lk.splice(+i,1);EMB=-1;save();proj()}
+ else if(a==='emb'){EMB=EMB===+i?-1:+i;proj()}
+ else if(a==='ai'){pick({multiple:true},async f=>{toast('جاري تجهيز الصور…');p.im=p.im||[];let c=0;for(const x of f){if(!/^image\//.test(x.type))continue;try{const k=await putImg(x,'p-'+nid()+'-'+(c++));if(k)p.im.push(k)}catch(er){}}save();proj()})}
+ else if(a==='di'){const k=p.im.splice(+i,1)[0];delete S.att[k];save();proj()}
+ else if(a==='zoom'){if(!S.att[i])return;const d=document.createElement('div');d.className='lb';d.innerHTML=`<img src="${S.att[i]}" alt="">`;d.onclick=()=>d.remove();document.body.appendChild(d)}
+ else if(a==='pn'){if(!(p.n||'').trim())return toast('سمّي المشروع الأول');PY=null;openNote(p.n.trim())}
+});
+
+/* ---- Obsidian-style vault ---- */
+S.fl=S.fl||[];
+const ex=s=>esc(String(s==null?'':s));
+const reEsc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+function hasLink(m,t){t=String(t||'').trim().toLowerCase();return !!t&&linksOf(m).some(x=>x.toLowerCase()===t)}
+function tagHas(n,g){return tagsOf(n).some(t=>t===g||t.startsWith(g+'/'))}
+function tagCounts(){const M=new Map();S.notes.forEach(n=>new Set(tagsOf(n)).forEach(t=>M.set(t,(M.get(t)||0)+1)));return new Map([...M].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0],'ar')))}
+const CAL={note:'#4C7BE0',info:'#4C7BE0',tip:'#0F9D8A',hint:'#0F9D8A',success:'#3DBE6B',check:'#3DBE6B',done:'#3DBE6B',warning:'#D9822B',caution:'#D9822B',danger:'#D95B5B',error:'#D95B5B',bug:'#D95B5B',question:'#C9B21F',quote:'#8A94A0'};
+function inl(t,d){
+ const cd=[];
+ t=t.replace(/`([^`\n]+)`/g,(m,c)=>{cd.push(c);return '\u0001'+(cd.length-1)+'\u0001'});
+ t=t.replace(/!\[\[([^\]|]+)(?:\|[^\]]*)?\]\]/g,(m,nm)=>{nm=nm.trim();const b0=nm.split('#')[0];
+  if(IMG.test(nm)){const k=AK(nm.replace(/&amp;/g,'&'));return k?`<img class="ai" src="${S.att[k]}" alt="">`:`<span class="mu">\u{1F5BC} ${nm}</span>`}
+  const tn=byTitle(b0.replace(/&amp;/g,'&'));if(!tn)return `<span class="mu">↗ ${nm}</span>`;
+  if(d>0)return `<a class="lk" data-l="${ex(tn.ti)}">↗ ${ex(tn.ti)}</a>`;
+  return `<div class="tr2"><a class="lk" data-l="${ex(tn.ti)}"><b>${ex(tn.ti)}</b></a>${fmt((tn.x||'').slice(0,1200),d+1)}</div>`});
+ t=t.replace(/!\[[^\]]*\]\((https?:\/\/[^)\s]+)\)/g,'<img class="ai" src="$1" alt="">');
+ t=t.replace(/\[\[([^\]]+)\]\]/g,(m,i)=>{const p=i.split('|'),a=p[0].split('#')[0].split('^')[0].trim(),al=p.slice(1).join('|').trim(),ok=byTitle(a.replace(/&amp;/g,'&'));if(/\.canvas$/i.test(a))return `<a class="lk" data-cvl="${a.replace(/\.canvas$/i,'').replace(/"/g,'')}">\u{1F5FA} ${(al||p[0].trim()).replace(/\.canvas$/i,'')}</a>`;return `<a class="lk ${ok?'':'no'}" data-l="${a.replace(/"/g,'')}">${al||p[0].trim()}</a>`});
+ t=t.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+|mailto:[^)\s]+)\)/g,'<a class="ex" href="$2" target="_blank" rel="noopener">$1</a>');
+ t=t.replace(/(^|[\s(])(https?:\/\/[^\s<)]+)/g,'$1<a class="ex" href="$2" target="_blank" rel="noopener">$2</a>');
+ t=t.replace(/\*\*([^*\n]+)\*\*/g,'<b>$1</b>').replace(/(^|[^*\w])\*([^*\n]+)\*/g,'$1<i>$2</i>').replace(/~~([^~\n]+)~~/g,'<s>$1</s>').replace(/==([^=\n]+)==/g,'<mark>$1</mark>');
+ t=t.replace(/(^|[\s(>])#([\p{L}\p{N}_]+(?:\/[\p{L}\p{N}_]+)*)/gu,'$1<a class="tg" data-g="$2">#$2</a>');
+ return t.replace(/\u0001(\d+)\u0001/g,(m,i)=>`<code>${cd[+i]}</code>`)}
+function fmt(x,d=0){
+ const L=String(x||'').replace(/\r/g,'').split('\n'),out=[];let i=0,hc=0,m;
+ while(i<L.length){
+  const ln=L[i];
+  if(/^```/.test(ln)){const lg=((ln.match(/^```\s*([\w+#-]+)/)||[])[1]||'').toLowerCase(),b=[];i++;while(i<L.length&&!/^```/.test(L[i]))b.push(L[i++]);i++;const code=esc(b.join('\n'));out.push(lg==='mermaid'&&!d?`<div class="mmd"><pre class="cb"><code>${code}</code></pre></div>`:`<div class="cbw">${lg?`<span class="cbl">${esc(lg)}</span>`:''}<button class="cpy" data-cp="1">نسخ</button><pre class="cb"><code>${code}</code></pre></div>`);continue}
+  if(!ln.trim()){if(out.length&&out[out.length-1]!=='<div class="sp"></div>')out.push('<div class="sp"></div>');i++;continue}
+  if(m=ln.match(/^(#{1,6})\s+(.+?)\s*#*\s*$/)){out.push(`<div class="hdg h${m[1].length}" ${d?'':`id="oh${hc}"`}>${inl(esc(m[2]),d)}</div>`);hc++;i++;continue}
+  if(/^\s*([-*_])(\s*\1){2,}\s*$/.test(ln)){out.push('<hr>');i++;continue}
+  if(/^\s{0,3}>/.test(ln)){const q=[];while(i<L.length&&/^\s{0,3}>/.test(L[i]))q.push(L[i++].replace(/^\s{0,3}>\s?/,''));
+   const cm=q[0].match(/^\[!(\w+)\][+-]?\s*(.*)$/);
+   if(cm){const ty=cm[1].toLowerCase(),c=CAL[ty]||'#6D5BD0';out.push(`<div class="callout" style="--c:${c}"><b>${inl(esc(cm[2]||cm[1]),d)}</b>${fmt(q.slice(1).join('\n'),d+1)}</div>`)}
+   else out.push(`<blockquote>${fmt(q.join('\n'),d+1)}</blockquote>`);continue}
+  if(ln.includes('|')&&i+1<L.length&&/^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?\s*$/.test(L[i+1])&&L[i+1].includes('-')){
+   const cells=r=>r.replace(/^\s*\||\|\s*$/g,'').split('|').map(c=>inl(esc(c.trim()),d));const hd=cells(ln);i+=2;const rows=[];
+   while(i<L.length&&L[i].includes('|')&&L[i].trim())rows.push(cells(L[i++]));
+   out.push(`<table><tr>${hd.map(c=>`<th>${c}</th>`).join('')}</tr>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</table>`);continue}
+  if(m=ln.match(/^(\s*)([-*+]|\d+[.)])\s+(?:\[([ xX])\]\s+)?(.*)$/)){
+   const lv=Math.floor(m[1].replace(/\t/g,'  ').length/2),mk=/\d/.test(m[2])?m[2].replace(')','.'):'•';
+   const task=m[3]!==undefined,dn=task&&m[3]!==' ';
+   out.push(`<div class="li" style="margin-inline-start:${lv*18}px">${task?`<span class="tkb ${dn?'on':''}" ${d?'':`data-tk="${i}"`}>${dn?'☑':'☐'}</span>`:`<span class="bul">${mk}</span>`}<span class="${dn?'dn':''}">${inl(esc(m[4]),d)}</span></div>`);i++;continue}
+  out.push(`<div class="p">${inl(esc(ln),d)}</div>`);i++}
+ return out.join('')}
+function heads(x){const o=[];let f=0,c=0;String(x||'').split('\n').forEach(l=>{if(/^```/.test(l)){f=!f;return}if(f)return;const m=l.match(/^(#{1,6})\s+(.+?)\s*#*\s*$/);if(m)o.push({lv:m[1].length,t:m[2],i:c++})});return o}
+const dirs=()=>{const s=new Set();const add=f=>{let p='';String(f||'').split('/').filter(Boolean).forEach(x=>{p+=(p?'/':'')+x;s.add(p)})};S.notes.forEach(n=>add(n.f));(S.fl||[]).forEach(add);return [...s].sort((a,b)=>a.localeCompare(b,'ar'))};
+const FO=()=>S.fo||(S.fo={});
+const byM=(a,b)=>(b.m||0)-(a.m||0);
+const noteRow=n=>`<div class="nr ${S.open===n.id?'on':''}" data-o="${n.id}">\u{1F4C4} ${ex(n.ti||'بدون عنوان')}</div>`;
+function treeH(){
+ const ds=dirs(),par=d=>d.includes('/')?d.slice(0,d.lastIndexOf('/')):'';
+ const sub=dir=>ds.filter(d=>par(d)===dir).map(d=>{const o=FO()[d],cnt=S.notes.filter(n=>(n.f||'')===d||(n.f||'').startsWith(d+'/')).length;
+  return `<div class="fd"><div class="fh ${S.cf===d?'cur':''}" data-vf="${ex(d)}"><span>${o?'▾':'▸'}</span><span>\u{1F4C1} ${ex(d.split('/').pop())}</span><small>${N(cnt)}</small></div>${o?`<div class="fc">${sub(d)}</div>`:''}</div>`}).join('')
+  +S.notes.filter(n=>(n.f||'')===dir).sort((a,b)=>(a.ti||'').localeCompare(b.ti||'','ar')).map(noteRow).join('');
+ return sub('')||'<div class="empty">مفيش ملاحظات</div>'}
+function hl(h,q){if(!q)return h;return h.replace(new RegExp(reEsc(esc(q)),'gi'),m=>`<mark>${m}</mark>`)}
+function searchH(q){
+ const tg=(q.match(/(?:^|\s)#([^\s#]+)/g)||[]).map(s=>s.trim().slice(1).toLowerCase()),txt=q.replace(/(?:^|\s)#[^\s#]+/g,' ').trim().toLowerCase(),r=[];
+ for(const n of S.notes){
+  if(tg.length&&!tg.every(t=>tagsOf(n).some(x=>x.toLowerCase()===t||x.toLowerCase().startsWith(t+'/'))))continue;
+  if(!txt){r.push({n,s:'',sc:0});continue}
+  const T=(n.ti||'').toLowerCase(),X=(n.x||'').toLowerCase(),P=(n.f||'').toLowerCase(),ti=T.includes(txt),xi=X.indexOf(txt);
+  if(!ti&&xi<0&&!P.includes(txt))continue;
+  let sn='';if(xi>=0){const a=Math.max(0,xi-30);sn=(n.x||'').slice(a,xi+txt.length+60).replace(/\n+/g,' ')}
+  r.push({n,s:sn,sc:(ti?2:0)+(xi>=0?1:0)})}
+ r.sort((a,b)=>b.sc-a.sc);
+ return `<div class="sm">${N(r.length)} نتيجة</div>`+(r.slice(0,60).map(({n,s})=>`<div class="nr sr" data-o="${n.id}"><b>${hl(ex(n.ti||'بدون عنوان'),txt)}</b>${s?`<small>${hl(esc(s),txt)}</small>`:''}</div>`).join('')||'<div class="empty">لا نتائج.</div>')}
+function sideBody(){
+ const el=$('#sbb');if(!el)return;const q=(S.q||'').trim();
+ if(q){el.innerHTML=searchH(q);return}
+ if(S.tag){el.innerHTML=`<div class="chips"><button class="chip on" data-g="">#${ex(S.tag)} ✕</button></div>`+(S.notes.filter(n=>tagHas(n,S.tag)).sort(byM).map(noteRow).join('')||'<div class="empty">لا نتائج.</div>');return}
+ const tg=[...tagCounts()].slice(0,40);
+ el.innerHTML=(S.notes.length>=8?`<h2 class="sh">الأحدث</h2>${S.notes.slice().sort(byM).slice(0,4).map(noteRow).join('')}`:'')+`<h2 class="sh">الملفات</h2>${treeH()}`+(tg.length?`<h2 class="sh">الوسوم</h2><div class="chips wr">${tg.map(([t,c])=>`<button class="chip" data-g="${ex(t)}">#${ex(t)} ${N(c)}</button>`).join('')}</div>`:'')}
+function side(){
+ const el=$('#sb');if(!el)return;
+ el.innerHTML=`<div class="vt"><button data-nn="1">\u{1F4C4} جديدة</button><button data-vnf="1">\u{1F4C1} مجلد</button><button data-vd="1">\u{1F4C5} اليوم</button><button data-vq="1">\u{1F50D} تنقّل</button><button data-y="obs" data-yi="1">\u{1F4E5} استيراد</button><button data-y="obs" data-yi="2">\u{1F5C2} Vault</button></div><input id="nq" type="search" placeholder="\u{1F50D} بحث في النص أو #وسم" value="${ex(S.q||'')}" style="width:100%;margin:8px 0">${S.cf?`<div class="cfb">\u{1F4C1} ${ex(S.cf)}<span><button data-vfr="1" aria-label="rename">✎</button><button data-vfd="1" aria-label="delete">\u{1F5D1}</button><button data-vf0="1" aria-label="root">✕</button></span></div>`:''}<div id="sbb"></div>`;
+ $('#nq').oninput=e=>{S.q=e.target.value;sideBody()};sideBody()}
+function panelsH(n){
+ const t=(n.ti||'').trim(),bl=t?S.notes.filter(m=>m!==n&&hasLink(m,t)):[],out=[...new Set(linksOf(n))],
+  um=t.length>=3?S.notes.filter(m=>m!==n&&!hasLink(m,t)&&(m.x||'').toLowerCase().includes(t.toLowerCase())):[],hs=S.edit?[]:heads(n.x);
+ const ctx=(m)=>{const re=new RegExp('\\[\\['+reEsc(t)+'(?=[\\]|#^])','i'),l=(m.x||'').split('\n').find(l=>re.test(l))||'';return l.trim().slice(0,110)};
+ return (hs.length?`<details class="pn" open><summary>المحتويات (${N(hs.length)})</summary>${hs.map(h=>`<a class="ol" style="margin-inline-start:${(h.lv-1)*12}px" data-vo="${h.i}">${ex(h.t)}</a>`).join('')}</details>`:'')
+ +`<details class="pn" open><summary>روابط واردة (${N(bl.length)})</summary>${bl.map(m=>`<div class="bk"><a class="lk" data-l="${ex(m.ti)}">↗ ${ex(m.ti)}</a><small>${ex(ctx(m))}</small></div>`).join('')||'<div class="empty" style="padding:6px 0">لا توجد ملاحظات تشير لهذه الملاحظة.</div>'}</details>`
+ +`<details class="pn"><summary>روابط خارجة (${N(out.length)})</summary>${out.map(x=>`<a class="lk ${byTitle(x)?'':'no'}" data-l="${ex(x)}" style="display:block;margin:4px 0">${byTitle(x)?'↗ ':'+ '}${ex(x)}</a>`).join('')||'<div class="empty" style="padding:6px 0">مفيش روابط.</div>'}</details>`
+ +(um.length?`<details class="pn"><summary>إشارات غير مربوطة (${N(um.length)})</summary>${um.slice(0,8).map(m=>`<div class="bk"><a class="lk" data-l="${ex(m.ti)}">↗ ${ex(m.ti)}</a> <button class="chip" data-vu="${m.id}">ربط</button></div>`).join('')}</details>`:'')}
+function welcomeH(){const lk=S.notes.reduce((a,n)=>a+new Set(linksOf(n)).size,0);
+ return `<div class="card" style="text-align:center;padding:30px 16px"><div style="font-size:44px">\u{1F9E0}</div><h2 style="margin:8px 0">الأفكار</h2><p style="color:var(--mu);line-height:1.9;margin:0 0 12px">${N(S.notes.length)} ملاحظة · ${N(lk)} رابط · ${N(tagCounts().size)} وسم · ${N(dirs().length)} مجلد</p><div class="row" style="justify-content:center"><button class="p" data-nn="1" style="--c:var(--ac);flex:none;padding:8px 18px;font-size:15px">+ ملاحظة جديدة</button><button data-vd="1" style="flex:none;padding:8px 18px;font-size:15px">\u{1F4C5} ملاحظة اليوم</button></div><p style="color:var(--mu);font-size:12px;margin:14px 0 0;line-height:1.8">اكتب [[ لربط ملاحظة · #وسم · Ctrl+O للتنقّل السريع · Ctrl+E للتحرير/القراءة</p></div>`}
+let SVT=null;const flush=()=>{if(SVT){clearTimeout(SVT);SVT=null;save()}};window.addEventListener('pagehide',flush);
+function renameLinks(o,nw){[S.cv,...(S.cvs||[])].forEach(C=>C.cards.forEach(c=>{if(c.f&&c.f.toLowerCase()===o.toLowerCase())c.f=nw}));const re=new RegExp('(!?\\[\\[)'+reEsc(o)+'(?=[\\]|#^])','gi');S.notes.forEach(m=>{if(m.x&&re.test(m.x)){re.lastIndex=0;m.x=m.x.replace(re,(a,p)=>p+nw)}re.lastIndex=0})}
+let AC=null;
+function acUpdate(ta){
+ const box=$('#ac');if(!box)return;const p=ta.selectionStart,b=ta.value.slice(0,p);let m;
+ if(m=b.match(/\[\[([^\]\n]*)$/)){const q=m[1].split('|')[0].toLowerCase();AC={s:p-m[0].length,e:p,pre:'[[',post:']]',items:S.notes.filter(n=>(n.ti||'').trim()&&n.id!==S.open&&n.ti.toLowerCase().includes(q)).sort(byM).slice(0,7).map(n=>n.ti.trim())}}
+ else if(m=b.match(/(?:^|\s)#([\p{L}\p{N}_\/]*)$/u)){const q=m[1].toLowerCase();AC={s:p-m[1].length-1,e:p,pre:'#',post:' ',items:[...tagCounts().keys()].filter(t=>t.toLowerCase().startsWith(q)&&t!==m[1]).slice(0,7)}}
+ else AC=null;
+ box.innerHTML=AC&&AC.items.length?AC.items.map(t=>`<button data-va="${ex(t)}">${AC.pre==='#'?'#':''}${ex(t)}</button>`).join(''):''}
+function tbar(a){
+ const ta=$('#eb');if(!ta)return;const s=ta.selectionStart,e=ta.selectionEnd,v=ta.value,sel=v.slice(s,e);let ins,cs,ce;
+ const W=(x,y)=>{ins=x+sel+y;cs=s+x.length;ce=cs+sel.length};
+ if(a==='b')W('**','**');else if(a==='i')W('*','*');else if(a==='k')W('`','`');else if(a==='w')W('[[',']]');else if(a==='d'){ins=iso(0);cs=ce=s+ins.length}
+ else{const P={h:'## ',l:'- ',c:'- [ ] ',q:'> ',n:'1. '}[a],ls=v.lastIndexOf('\n',s-1)+1;let le=v.indexOf('\n',e);if(le<0)le=v.length;const blk=v.slice(ls,le).split('\n').map(l=>P+l).join('\n');ta.value=v.slice(0,ls)+blk+v.slice(le);ta.focus();ta.setSelectionRange(ls+P.length,ls+blk.length);ta.dispatchEvent(new Event('input'));return}
+ ta.value=v.slice(0,s)+ins+v.slice(e);ta.focus();ta.setSelectionRange(cs,ce);ta.dispatchEvent(new Event('input'))}
+function bindEd(n){
+ const ta=$('#eb'),ti=$('#et');let old=n.ti||'';
+ const touch=()=>{n.m=Date.now();clearTimeout(SVT);SVT=setTimeout(()=>{SVT=null;save()},300)};
+ ti.oninput=()=>{n.ti=ti.value;touch()};
+ ti.onchange=()=>{const a=old.trim(),b=(n.ti||'').trim();if(a&&b&&a.toLowerCase()!==b.toLowerCase()){renameLinks(a,b);toast('تم تحديث الروابط للاسم الجديد')}old=n.ti||'';touch();flush();const r=document.querySelector('#sbb [data-o="'+n.id+'"]');if(r&&!r.classList.contains('sr'))r.textContent='\u{1F4C4} '+(n.ti||'\u0628\u062f\u0648\u0646 \u0639\u0646\u0648\u0627\u0646')};
+ ta.oninput=()=>{n.x=ta.value;touch();const pv=$('#pv');if(pv)pv.innerHTML=fmt(n.x);acUpdate(ta)};
+ ta.onkeydown=e=>{
+  const p=ta.selectionStart,v=ta.value,ls=v.lastIndexOf('\n',p-1)+1,line=v.slice(ls,p);
+  if((e.ctrlKey||e.metaKey)&&e.key==='b'){e.preventDefault();tbar('b')}
+  else if((e.ctrlKey||e.metaKey)&&e.key==='i'){e.preventDefault();tbar('i')}
+  else if(e.key==='Enter'&&!e.shiftKey&&!e.ctrlKey&&p===ta.selectionEnd){const m=line.match(/^(\s*)([-*+]|\d+\.)\s(\[[ xX]\]\s)?(.*)$/);
+   if(m){e.preventDefault();if(!m[4]){ta.setRangeText('',ls,p,'end')}else{const mk=/\d/.test(m[2])?(parseInt(m[2])+1)+'.':m[2];ta.setRangeText('\n'+m[1]+mk+' '+(m[3]?'[ ] ':''),p,p,'end')}ta.dispatchEvent(new Event('input'))}}
+  else if(e.key==='Tab'&&/^(\s*)([-*+]|\d+\.)\s/.test(line)){e.preventDefault();if(e.shiftKey){if(/^ {1,2}/.test(line)){const k=line.match(/^ {1,2}/)[0].length;ta.setRangeText('',ls,ls+k,'preserve')}}else ta.setRangeText('  ',ls,ls,'preserve');ta.dispatchEvent(new Event('input'))}
+  else if(e.key==='Escape'){AC=null;$('#ac').innerHTML=''}};
+ ta.onclick=ta.onkeyup=e=>{if(!['Enter','Tab','Escape'].includes(e.key))acUpdate(ta)}}
+function vault(){
+ if(S.open&&!S.notes.find(m=>m.id===S.open))S.open=null;
+ $('#iv').innerHTML=`<div class="ob ${S.open?'open':''}"><div id="sb"></div><div id="mn"></div></div>`;side();main()}
+function main(){
+ const el=$('#mn');if(!el)return;const n=S.notes.find(m=>m.id===S.open);
+ if(!n){el.innerHTML=welcomeH();return}
+ const ds=dirs(),tg=[...new Set(tagsOf(n))],wc=(n.x.match(/\S+/g)||[]).length;
+ el.innerHTML=`<div class="nb"><button class="bkm" data-bk="1">→</button><span class="crumb">${n.f?'\u{1F4C1} '+ex(n.f.replace(/\//g,' › ')):'\u{1F4C1} الرئيسية'}</span><button data-ed="1" title="Ctrl+E">${S.edit?'\u{1F441} قراءة':'✎ تحرير'}</button><button data-dn="${n.id}" aria-label="حذف">\u{1F5D1}</button></div>`
+ +(S.edit?`<div class="sp2"><div><input id="et" value="${ex(n.ti)}" placeholder="العنوان" style="width:100%;font-weight:800;font-size:20px"><div class="etb">${[['b','B'],['i','I'],['h','H'],['l','•'],['n','1.'],['c','☐'],['q','❝'],['k','</>'],['w','[[ ]]'],['d','\u{1F4C5}']].map(([a,t])=>`<button data-vt="${a}">${t}</button>`).join('')}<button data-y="ni">\u{1F5BC}</button></div><textarea id="eb" placeholder="اكتب…  [[ لربط ملاحظة · #وسم · - [ ] مهمة · > [!tip] ملاحظة">${ex(n.x)}</textarea><div id="ac" class="acb"></div><select id="mv" style="width:100%;margin-top:8px"><option value="">\u{1F4C1} الرئيسية</option>${ds.map(d=>`<option value="${ex(d)}" ${d===(n.f||'')?'selected':''}>\u{1F4C1} ${ex(d)}</option>`).join('')}<option value="__n">＋ مجلد جديد…</option></select></div><div class="note rd" id="pv">${fmt(n.x)}</div></div>`
+  :`<h1 class="nt">${ex(n.ti||'بدون عنوان')}</h1><div class="pr">${tg.map(t=>`<a class="tg" data-g="${ex(t)}">#${ex(t)}</a>`).join(' ')}<small>${N(wc)} كلمة · ${n.m?new Date(n.m).toLocaleDateString('ar-EG'):''}</small></div><div class="note rd" id="pv" style="margin-top:6px">${fmt(n.x)||'<span style="color:var(--mu)">فارغة، اضغط تحرير.</span>'}</div>`)
+ +panelsH(n);
+ if(S.edit)bindEd(n)}
+function qsw(cb){
+ if($('.qs'))return;const d=document.createElement('div');d.className='qs';
+ d.innerHTML='<div><input id="qi" placeholder="ابحث عن ملاحظة أو اكتب اسم جديد (Enter)" autocomplete="off"><div id="ql"></div></div>';document.body.appendChild(d);
+ let sel=0,res=[],q='';const inp=$('#qi');
+ const fz=(s,k)=>{s=s.toLowerCase();let i=0,sc=0,last=-2;for(const c of k){const j=s.indexOf(c,i);if(j<0)return -1;sc+=j===last+1?3:1;last=j;i=j+1}return sc-s.length*.01};
+ const draw=()=>{q=inp.value.trim();const lq=q.toLowerCase();res=(lq?S.notes.map(n=>({n,s:fz((n.ti||'')+' '+(n.f||''),lq)})).filter(r=>r.s>=0).sort((a,b)=>b.s-a.s):S.notes.slice().sort(byM).map(n=>({n}))).slice(0,10);
+  const cr=q&&!S.notes.some(n=>(n.ti||'').trim().toLowerCase()===lq);if(sel>res.length-(cr?0:1))sel=Math.max(0,res.length-(cr?0:1));
+  $('#ql').innerHTML=res.map((r,i)=>`<div class="qi ${i===sel?'on':''}" data-qi="${i}">\u{1F4C4} ${ex(r.n.ti||'بدون عنوان')} <small>${ex(r.n.f||'')}</small></div>`).join('')+(cr?`<div class="qi ${sel===res.length?'on':''}" data-qi="new">＋ إنشاء: ${ex(q)}</div>`:'')};
+ const act=i=>{let n;const ed=i==='new'||i>=res.length;if(ed){if(!q)return;n=addNote(q)}else n=res[i].n;d.remove();if(cb)return cb(n);S.open=n.id;S.edit=ed;S.isub=0;if(S.tab!==3)go(3);else ideas()};
+ inp.oninput=()=>{sel=0;draw()};
+ inp.onkeydown=e=>{const mx=res.length-1+((q&&!S.notes.some(n=>(n.ti||'').trim().toLowerCase()===q.toLowerCase()))?1:0);
+  if(e.key==='ArrowDown'){e.preventDefault();sel=Math.min(mx,sel+1);draw()}else if(e.key==='ArrowUp'){e.preventDefault();sel=Math.max(0,sel-1);draw()}else if(e.key==='Enter'){act(sel)}else if(e.key==='Escape')d.remove()};
+ d.onclick=e=>{if(e.target===d)return d.remove();const it=e.target.closest('[data-qi]');if(it)act(it.dataset.qi==='new'?'new':+it.dataset.qi)};
+ draw();inp.focus()}
+function daily(){const t=iso(0);let n=S.notes.find(m=>m.ti===t&&m.f==='Daily');
+ if(!n){n=addNote(t);n.f='Daily';n.x='## مهام اليوم\n- [ ] \n\n## ملاحظات\n\n';save()}
+ FO().Daily=true;S.open=n.id;S.edit=true;S.isub=0;if(S.tab!==3)go(3);else ideas()}
+function newFolder(){const nm=prompt('اسم المجلد (ممكن مسار زي: شغل/عملاء)');if(!nm||!nm.trim())return null;let p=nm.trim().replace(/^\/+|\/+$/g,'');if(!nm.trim().startsWith('/')&&S.cf)p=S.cf+'/'+p;if(!(S.fl||(S.fl=[])).includes(p))S.fl.push(p);let a='';p.split('/').forEach(x=>{a+=(a?'/':'')+x;FO()[a]=true});save();return p}
+/* graph */
+let GU=0,GZ={k:1,x:0,y:0};
+function graph(){
+ const NS=S.notes,idx=new Map();NS.forEach((n,i)=>idx.set((n.ti||'').trim().toLowerCase(),i));
+ const nodes=NS.map((n,i)=>({i,id:n.id,t:n.ti||'—',f:(n.f||'').split('/')[0],deg:0,un:0})),E=[],seen=new Set();
+ NS.forEach((n,i)=>{for(const t of new Set(linksOf(n).map(x=>x.toLowerCase()))){let j=idx.get(t);if(j===undefined){if(!GU)continue;j=nodes.length;idx.set(t,j);nodes.push({i:j,id:null,t,f:'',deg:0,un:1})}if(j===i)continue;const k=i<j?i+'-'+j:j+'-'+i;if(seen.has(k))continue;seen.add(k);E.push([i,j]);nodes[i].deg++;nodes[j].deg++}});
+ const n=nodes.length;let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+ nodes.forEach((o,k)=>{const a=k/Math.max(1,n)*6.283,r=60+rnd()*140;o.x=Math.cos(a)*r;o.y=Math.sin(a)*r;o.vx=o.vy=0});
+ const it=n>350?100:250,kk=55;
+ for(let s=0;s<it;s++){const T=1-s/it;
+  for(let a=0;a<n;a++){const A=nodes[a];for(let b=a+1;b<n;b++){const B=nodes[b];let dx=A.x-B.x,dy=A.y-B.y;const d2=dx*dx+dy*dy+.01;if(d2>160000)continue;const d=Math.sqrt(d2),f=kk*kk/d;dx/=d;dy/=d;A.vx+=dx*f;A.vy+=dy*f;B.vx-=dx*f;B.vy-=dy*f}}
+  for(const [a,b] of E){const A=nodes[a],B=nodes[b];let dx=B.x-A.x,dy=B.y-A.y;const d=Math.sqrt(dx*dx+dy*dy)+.01,f=d*d/kk*.12;dx/=d;dy/=d;A.vx+=dx*f;A.vy+=dy*f;B.vx-=dx*f;B.vy-=dy*f}
+  for(const o of nodes){o.vx-=o.x*.03;o.vy-=o.y*.03;const sp=Math.hypot(o.vx,o.vy)||1,m=Math.min(sp,14*T+1);o.x+=o.vx/sp*m;o.y+=o.vy/sp*m;o.vx=o.vy=0}}
+ const W=1000,H=640;let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;nodes.forEach(o=>{x0=Math.min(x0,o.x);x1=Math.max(x1,o.x);y0=Math.min(y0,o.y);y1=Math.max(y1,o.y)});
+ const sc=n?Math.min((W-120)/Math.max(1,x1-x0),(H-90)/Math.max(1,y1-y0),3):1,cx=(x0+x1)/2,cy=(y0+y1)/2;nodes.forEach(o=>{o.X=W/2+(o.x-cx)*sc;o.Y=H/2+(o.y-cy)*sc});
+ const P=['#6D5BD0','#4C7BE0','#0F9D8A','#3DBE6B','#C9B21F','#D9822B','#D95B5B'],col=o=>o.un?'#8A94A0':o.f?P[[...o.f].reduce((a,c)=>a+c.charCodeAt(0),0)%P.length]:'#4FD1BC';
+ const cur=S.notes.find(m=>m.id===S.open),lab=n<=70;
+ GZ={k:1,x:0,y:0};
+ $('#iv').innerHTML=`<div class="gh"><span>${N(NS.length)} ملاحظة · ${N(E.length)} رابط</span><input id="gq" type="search" placeholder="بحث في الرسم" style="flex:1;min-width:100px"><button class="chip ${GU?'on':''}" data-gu="1">غير مكتوبة</button><button class="chip" data-gz="1.25">＋</button><button class="chip" data-gz="0.8">−</button><button class="chip" data-gz="0">⟲</button></div>${NS.length?'':'<div class="empty">مفيش ملاحظات لسه.</div>'}<svg id="gs" class="gsvg" viewBox="0 0 ${W} ${H}"><g id="gg">${E.map(([a,b])=>`<line class="ge" data-a="${a}" data-b="${b}" x1="${nodes[a].X.toFixed(1)}" y1="${nodes[a].Y.toFixed(1)}" x2="${nodes[b].X.toFixed(1)}" y2="${nodes[b].Y.toFixed(1)}"/>`).join('')}${nodes.map((o,k)=>{const r=4+Math.sqrt(o.deg)*2.4;return `<g class="gn" data-gn="${k}" ${o.id?`data-gi="${o.id}"`:''} transform="translate(${o.X.toFixed(1)},${o.Y.toFixed(1)})"><circle r="${r.toFixed(1)}" fill="${col(o)}" ${cur&&o.id===cur.id?'stroke="var(--tx)" stroke-width="3"':''} opacity="${o.un?.45:1}"/><text class="gt ${lab||o.deg>=3?'':'hid'}" y="${(-r-5).toFixed(1)}" text-anchor="middle">${ex(o.t.slice(0,24))}</text></g>`}).join('')}</g></svg>`;
+ const svg=$('#gs'),g=$('#gg');window._gapply=()=>g.setAttribute('transform',`translate(${GZ.x},${GZ.y}) scale(${GZ.k})`);
+ const clr=()=>{svg.querySelectorAll('.gn,.ge').forEach(x=>x.style.opacity='')};
+ svg.onmouseover=e=>{const gn=e.target.closest('.gn');if(!gn)return clr();const k=+gn.dataset.gn,nb=new Set([k]);E.forEach(([a,b])=>{if(a===k)nb.add(b);if(b===k)nb.add(a)});svg.querySelectorAll('.gn').forEach(x=>x.style.opacity=nb.has(+x.dataset.gn)?1:.15);svg.querySelectorAll('.ge').forEach(l=>l.style.opacity=(+l.dataset.a===k||+l.dataset.b===k)?1:.04)};
+ svg.onmouseleave=clr;
+ svg.onwheel=e=>{e.preventDefault();const r=svg.getBoundingClientRect(),px=(e.clientX-r.left)/r.width*W,py=(e.clientY-r.top)/r.height*H,f=e.deltaY<0?1.15:.87,k=Math.min(8,Math.max(.3,GZ.k*f));GZ.x=px-(px-GZ.x)*k/GZ.k;GZ.y=py-(py-GZ.y)*k/GZ.k;GZ.k=k;_gapply()};
+ let dr=null;svg.onpointerdown=e=>{if(e.target.closest('.gn'))return;dr={x:e.clientX,y:e.clientY,gx:GZ.x,gy:GZ.y};svg.setPointerCapture(e.pointerId)};
+ svg.onpointermove=e=>{if(!dr)return;const r=svg.getBoundingClientRect();GZ.x=dr.gx+(e.clientX-dr.x)/r.width*W;GZ.y=dr.gy+(e.clientY-dr.y)/r.height*H;_gapply()};
+ svg.onpointerup=svg.onpointercancel=()=>{dr=null};
+ $('#gq').oninput=e=>{const q=e.target.value.trim().toLowerCase();svg.querySelectorAll('.gn').forEach(x=>{const o=nodes[+x.dataset.gn];x.style.opacity=!q||o.t.toLowerCase().includes(q)?1:.12;if(q&&o.t.toLowerCase().includes(q))x.querySelector('.gt').classList.remove('hid')})}}
+document.addEventListener('keydown',e=>{if(S.tab!==3)return;if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='o'){e.preventDefault();qsw()}else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='e'&&S.open&&!S.isub){e.preventDefault();S.edit=!S.edit;ideas()}});
+document.addEventListener('change',e=>{if(e.target.id!=='mv')return;const n=S.notes.find(m=>m.id===S.open);if(!n)return;let v=e.target.value;if(v==='__n'){const sv=S.cf;S.cf='';v=newFolder();S.cf=sv;if(v===null){main();return}}n.f=v;n.m=Date.now();FO()[v]=true;save();side();main()});
+document.addEventListener('click',e=>{
+ const t=e.target.closest('[data-vf],[data-vf0],[data-vfr],[data-vfd],[data-vnf],[data-vd],[data-vq],[data-vt],[data-va],[data-vu],[data-vo],[data-tk],[data-gi],[data-gu],[data-gz]');if(!t)return;const D=t.dataset,cur=S.notes.find(m=>m.id===S.open);
+ if(D.vf!==undefined){FO()[D.vf]=!FO()[D.vf];S.cf=D.vf;sideBody();side()}
+ else if(D.vf0!==undefined){S.cf='';side()}
+ else if(D.vfr!==undefined){const o=S.cf,nm=prompt('اسم المجلد الجديد (مسار كامل)',o);if(!nm||!nm.trim())return;const w=nm.trim().replace(/^\/+|\/+$/g,'');const mv=f=>f===o?w:(f||'').startsWith(o+'/')?w+f.slice(o.length):f;S.notes.forEach(n=>{n.f=mv(n.f||'')});S.fl=(S.fl||[]).map(mv);const fo=FO();Object.keys(fo).forEach(k=>{if(mv(k)!==k){fo[mv(k)]=fo[k];delete fo[k]}});S.cf=w;save();vault()}
+ else if(D.vfd!==undefined){const o=S.cf;if(S.notes.some(n=>(n.f||'')===o||(n.f||'').startsWith(o+'/')))return toast('المجلد فيه ملاحظات، انقلها الأول');S.fl=(S.fl||[]).filter(f=>f!==o&&!f.startsWith(o+'/'));S.cf='';save();side()}
+ else if(D.vnf!==undefined){if(newFolder()!==null)side()}
+ else if(D.vd!==undefined)daily();
+ else if(D.vq!==undefined)qsw();
+ else if(D.vt)tbar(D.vt);
+ else if(D.va!==undefined&&AC){const ta=$('#eb');if(!ta)return;const ins=AC.pre+D.va+AC.post;ta.value=ta.value.slice(0,AC.s)+ins+ta.value.slice(AC.e);const c=AC.s+ins.length;AC=null;$('#ac').innerHTML='';ta.focus();ta.setSelectionRange(c,c);ta.dispatchEvent(new Event('input'))}
+ else if(D.vu&&cur){const m=S.notes.find(x=>x.id===D.vu),tt=(cur.ti||'').trim();if(!m)return;const i=m.x.toLowerCase().indexOf(tt.toLowerCase());if(i>=0){const occ=m.x.slice(i,i+tt.length);m.x=m.x.slice(0,i)+'[['+(occ===tt?tt:tt+'|'+occ)+']]'+m.x.slice(i+tt.length);m.m=Date.now();save();main()}}
+ else if(D.vo!==undefined){const el=document.getElementById('oh'+D.vo);if(el)el.scrollIntoView({behavior:'smooth',block:'start'})}
+ else if(D.tk!==undefined&&cur){const L=cur.x.split('\n'),i=+D.tk;if(L[i]===undefined)return;L[i]=L[i].replace(/\[( |x|X)\]/,(m,c)=>c===' '?'[x]':'[ ]');cur.x=L.join('\n');cur.m=Date.now();save();const pv=$('#pv');if(pv)pv.innerHTML=fmt(cur.x)}
+ else if(D.gi){S.open=D.gi;S.edit=false;S.isub=0;ideas()}
+ else if(D.gu!==undefined){GU^=1;graph()}
+ else if(D.gz!==undefined){const z=+D.gz;if(!z)GZ={k:1,x:0,y:0};else{const k=Math.min(8,Math.max(.3,GZ.k*z));GZ.x=500-(500-GZ.x)*k/GZ.k;GZ.y=320-(320-GZ.y)*k/GZ.k;GZ.k=k}_gapply()}
+});
+
+/* ---- Multi-canvas + Obsidian .canvas ---- */
+S.cvs=S.cvs||[];
+function CV(){return S.cc&&S.cvs.find(c=>c.id===S.cc)||S.cv}
+const CC={'1':'#D95B5B','2':'#D9822B','3':'#C9B21F','4':'#3DBE6B','5':'#4FD1BC','6':'#6D5BD0'};
+function cardH(c){
+ if(c.g)return `<div class="cgl">${ex(c.t||'')}</div>`;
+ if(c.im&&S.att[c.im])return `<img class="ai" src="${S.att[c.im]}" style="margin:0;width:100%;height:100%;object-fit:contain" alt="">`;
+ if(c.f){const n=byTitle(c.f);return `<a class="lk ${n?'':'no'}" data-l="${ex(c.f)}"><b>\u2197 ${ex(c.f)}</b></a>`+(n?`<div class="cpv">${fmt((n.x||'').slice(0,260),1)}</div>`:'')}
+ return fmt(c.t,1)||'\u2026'}
+function cst(c){return (c.w?`;width:${c.w}px`:'')+(c.h&&(c.g||c.im)?`;height:${c.h}px`:'')+(c.c?`;border-color:${c.c};border-width:2px`:'')}
+function cvBar(){
+ const L=[{id:'',n:'\u0627\u0644\u0643\u0627\u0646\u0641\u0627\u0633 \u0627\u0644\u0631\u0626\u064a\u0633\u064a'},...S.cvs.map(c=>({id:c.id,n:c.n||'\u0628\u062f\u0648\u0646 \u0627\u0633\u0645'}))];
+ return `<div class="row" style="margin:0 0 8px;align-items:center"><select id="cvsel" style="flex:1">${L.map(x=>`<option value="${x.id}" ${(S.cc||'')===x.id?'selected':''}>${ex(x.n)}</option>`).join('')}<option value="__n">\uff0b \u0643\u0627\u0646\u0641\u0627\u0633 \u062c\u062f\u064a\u062f\u2026</option></select><button data-cvr="1" aria-label="rename" style="flex:none;padding:8px 12px;font-size:14px">\u270e</button><button data-cvd="1" aria-label="delete" style="flex:none;padding:8px 12px;font-size:14px">\u{1F5D1}</button></div>`}
+function cvEdges(){
+ const C=CV(),g=id=>{const c=C.cards.find(k=>k.id===id);if(!c)return null;const e=$('[data-c="'+id+'"]'),w=(e?e.offsetWidth:150)/2,h=(e?e.offsetHeight:56)/2;return{x:c.x+w,y:c.y+h,w,h}};
+ const out=(A,B)=>{let dx=B.x-A.x,dy=B.y-A.y;if(!dx&&!dy)dy=1;const f=(R)=>Math.min(R.w/(Math.abs(dx)||1e-9),R.h/(Math.abs(dy)||1e-9));const ta=Math.min(f(A),.5),tb=Math.min(f(B),.5);return [A.x+dx*ta,A.y+dy*ta,B.x-dx*tb,B.y-dy*tb]};
+ $('#cvs').innerHTML='<defs><marker id="cva" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--ac2)"/></marker></defs>'+C.edges.map(([a,b,l,ar])=>{const A=g(a),B=g(b);if(!A||!B)return'';const [x1,y1,x2,y2]=out(A,B);return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="var(--ac2)" stroke-width="2" opacity=".85" ${ar?'marker-end="url(#cva)"':''}/>`+(l?`<text x="${(x1+x2)/2}" y="${(y1+y2)/2-4}" text-anchor="middle" font-size="12" fill="var(--tx)" style="paint-order:stroke;stroke:var(--surf);stroke-width:3px">${ex(l)}</text>`:'')}).join('')}
+async function impCanvas(e,im){
+ const j=JSON.parse(await e.text()),nodes=j.nodes||[],edges=j.edges||[];if(!nodes.length&&!edges.length)return 0;
+ const cards=[];
+ for(const n of nodes){const c={id:String(n.id),x:Math.round(n.x||0),y:Math.round(n.y||0),w:Math.round(n.width||250),h:Math.round(n.height||100),t:''};
+  if(n.color)c.c=CC[n.color]||(/^#[0-9a-f]{3,8}$/i.test(n.color)?n.color:'');
+  if(n.type==='text')c.t=n.text||'';
+  else if(n.type==='file'){const f=String(n.file||''),b=base(f);if(/\.md$/i.test(f))c.f=b.replace(/\.md$/i,'');else if(IMG.test(f)){const en=im[b.toLowerCase()];if(en){try{const k=await putImg(await en.blob(),b);if(k)c.im=k}catch(er){}}if(!c.im)c.t='\u{1F5BC} '+b}else c.t='\u{1F4CE} '+b}
+  else if(n.type==='link')c.t=n.url||'';
+  else if(n.type==='group'){c.g=1;c.t=n.label||''}
+  else c.t=n.text||n.label||'';
+  cards.push(c)}
+ const ids=new Set(cards.map(c=>c.id)),ed=edges.filter(x=>ids.has(String(x.fromNode))&&ids.has(String(x.toNode))).map(x=>[String(x.fromNode),String(x.toNode),x.label||'',x.toEnd==='none'?'':'a']);
+ let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;cards.forEach(c=>{x0=Math.min(x0,c.x);y0=Math.min(y0,c.y);x1=Math.max(x1,c.x+c.w);y1=Math.max(y1,c.y+c.h)});
+ const z=Math.min(1,Math.max(.4,Math.round(Math.min(340/((x1-x0)||1),460/((y1-y0)||1))*10)/10));
+ S.cvs.push({id:nid(),n:base(e.p).replace(/\.canvas$/i,''),cards,edges:ed,px:Math.round(-x0*z+10),py:Math.round(-y0*z+10),z});return 1}
+document.addEventListener('change',e=>{if(e.target.id!=='cvsel')return;let v=e.target.value;if(v==='__n'){const nm=prompt('\u0627\u0633\u0645 \u0627\u0644\u0643\u0627\u0646\u0641\u0627\u0633 \u0627\u0644\u062c\u062f\u064a\u062f');if(!nm||!nm.trim()){canvas();return}const c={id:nid(),n:nm.trim(),cards:[],edges:[],px:0,py:0,z:1};S.cvs.push(c);v=c.id;save()}S.cc=v;S.sc=null;S.ce=null;S.lk=false;canvas()});
+document.addEventListener('click',e=>{
+ const t=e.target.closest('[data-cvr],[data-cvd],[data-cn]');if(!t)return;const D=t.dataset,C=CV();
+ if(D.cvr!==undefined){if(!S.cc)return toast('\u0627\u0644\u0643\u0627\u0646\u0641\u0627\u0633 \u0627\u0644\u0631\u0626\u064a\u0633\u064a \u0627\u0633\u0645\u0647 \u062b\u0627\u0628\u062a');const nm=prompt('\u0627\u0633\u0645 \u062c\u062f\u064a\u062f',C.n);if(nm&&nm.trim()){C.n=nm.trim();save();canvas()}}
+ else if(D.cvd!==undefined){if(!confirm(S.cc?'\u062d\u0630\u0641 \u0647\u0630\u0627 \u0627\u0644\u0643\u0627\u0646\u0641\u0627\u0633\u061f':'\u0645\u0633\u062d \u0643\u0644 \u0645\u0627 \u0641\u064a \u0627\u0644\u0643\u0627\u0646\u0641\u0627\u0633 \u0627\u0644\u0631\u0626\u064a\u0633\u064a\u061f'))return;if(S.cc){S.cvs=S.cvs.filter(c=>c.id!==S.cc);S.cc=''}else{S.cv.cards=[];S.cv.edges=[]}S.sc=null;S.ce=null;S.lk=false;save();canvas()}
+ else if(D.cn!==undefined)qsw(n=>{const C2=CV(),id=nid();C2.cards.push({id,x:Math.round(-C2.px/C2.z+30+(C2.cards.length%5)*18),y:Math.round(-C2.py/C2.z+30+(C2.cards.length%5)*18),w:230,f:(n.ti||'').trim()});S.sc=id;save();S.isub=1;ideas()})
+});
+
+/* ---- Mermaid + code copy + canvas links ---- */
+let MMP=null;
+function mmLoad(){return MMP||(MMP=new Promise((ok,no)=>{if(window.mermaid)return ok(window.mermaid);const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/mermaid@10.9.3/dist/mermaid.min.js';s.onload=()=>ok(window.mermaid);s.onerror=()=>{MMP=null;no(new Error('mm'))};document.head.appendChild(s)}))}
+let MMN=0;
+async function mmRun(){
+ const els=[...document.querySelectorAll('.mmd:not([data-done])')];if(!els.length)return;
+ let mm;try{mm=await mmLoad()}catch(e){els.forEach(el=>{if(!el.querySelector('.mme')){el.dataset.done='1';el.insertAdjacentHTML('beforeend','<div class="mme">\u062a\u0639\u0630\u0651\u0631 \u062a\u062d\u0645\u064a\u0644 \u0645\u0643\u062a\u0628\u0629 \u0627\u0644\u0631\u0633\u0645 (\u0645\u062d\u062a\u0627\u062c \u0625\u0646\u062a\u0631\u0646\u062a \u0623\u0648\u0644 \u0645\u0631\u0629)</div>')}});return}
+ const dk=document.documentElement.dataset.theme?document.documentElement.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches;
+ mm.initialize({startOnLoad:false,theme:dk?'dark':'default',securityLevel:'strict',fontFamily:'sans-serif',flowchart:{htmlLabels:false,padding:14}});
+ for(const el of els){el.dataset.done='1';const code=(el.querySelector('code')||{}).textContent||'';try{const r=await mm.render('mm'+(++MMN),code);el.innerHTML=`<div class="mmsvg">${r.svg}</div>`}catch(e){el.insertAdjacentHTML('beforeend','<div class="mme">\u0643\u0648\u062f \u0627\u0644\u0631\u0633\u0645 \u0641\u064a\u0647 \u062e\u0637\u0623 \u0641\u064a \u0627\u0644\u0635\u064a\u063a\u0629</div>');document.querySelectorAll('[id^="dmm"]').forEach(x=>x.remove())}}}
+{let T=null;const ob=new MutationObserver(()=>{if(T)return;T=setTimeout(()=>{T=null;if(document.querySelector('.mmd:not([data-done])'))mmRun()},120)});ob.observe(document.body,{childList:true,subtree:true})}
+document.addEventListener('click',e=>{
+ const t=e.target.closest('[data-cp],[data-cvl]');if(!t)return;
+ if(t.dataset.cp){const tx=(t.parentElement.querySelector('code')||{}).textContent||'';const done=()=>toast('\u062a\u0645 \u0627\u0644\u0646\u0633\u062e');if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(tx).then(done,()=>{});else{const a=document.createElement('textarea');a.value=tx;document.body.appendChild(a);a.select();try{document.execCommand('copy');done()}catch(er){}a.remove()}}
+ else{const nm=t.dataset.cvl.toLowerCase(),c=S.cvs.find(x=>(x.n||'').toLowerCase()===nm);if(!c)return toast('\u0627\u0644\u0643\u0627\u0646\u0641\u0627\u0633 \u062f\u0647 \u0645\u0634 \u0645\u0648\u062c\u0648\u062f \u2014 \u0627\u0633\u062a\u0648\u0631\u062f \u0645\u0644\u0641 .canvas \u0627\u0644\u0623\u0648\u0644');S.cc=c.id;S.sc=null;S.ce=null;S.open=null;S.isub=1;if(S.tab!==3)go(3);else ideas()}
+});
+
+/* ---- Smart merge sync + auto backups + onboarding ---- */
+const JJ=JSON.stringify;
+const MK={notes:x=>x.id,pj:x=>x.id,cvs:x=>x.id,'cv.cards':x=>x.id,'cvs.cards':x=>x.id,habits:x=>x.n,goals:x=>x.t,books:x=>x.t,tasks:x=>x.t,journal:x=>x.d,pk:x=>x.n,sleep:x=>x.d,log:x=>JJ(x)};
+let MCONF=[];
+function occKeys(a,f){const c={};return a.map(x=>{const k=String(f(x));c[k]=(c[k]||0)+1;return k+'#'+c[k]})}
+function mergeKeyed(B,L,R,path){
+ const f=MK[path]||(x=>x&&typeof x==='object'?(x.id||x.d||x.n||x.t||JJ(x)):JJ(x)),
+  kb=occKeys(B,f),kl=occKeys(L,f),kr=occKeys(R,f),mb=new Map(kb.map((k,i)=>[k,B[i]])),ml=new Map(kl.map((k,i)=>[k,L[i]])),mr=new Map(kr.map((k,i)=>[k,R[i]])),out=[],seen=new Set();
+ for(const k of [...kl,...kr]){if(seen.has(k))continue;seen.add(k);
+  const b=mb.get(k),l=ml.get(k),r=mr.get(k);let v;
+  if(l!==undefined&&r!==undefined)v=mergeVal(b,l,r,path);
+  else if(l!==undefined)v=(b!==undefined&&JJ(l)===JJ(b))?undefined:l;
+  else v=(b!==undefined&&JJ(r)===JJ(b))?undefined:r;
+  if(v!==undefined)out.push(v)}
+ return out}
+function mergeVal(b,l,r,path){
+ if(JJ(l)===JJ(r))return l;
+ if(b!==undefined){if(JJ(l)===JJ(b))return r;if(JJ(r)===JJ(b))return l}
+ if(Array.isArray(l)&&Array.isArray(r))return mergeKeyed(Array.isArray(b)?b:[],l,r,path);
+ if(l&&r&&typeof l==='object'&&typeof r==='object'&&!Array.isArray(l)&&!Array.isArray(r)){
+  const o={},bb=b&&typeof b==='object'?b:{};
+  for(const k of new Set([...Object.keys(l),...Object.keys(r),...Object.keys(bb)])){
+   const bv=bb[k],lv=l[k],rv=r[k],cp=path?path+'.'+k:k;let v;
+   if(lv===undefined&&rv===undefined)continue;
+   if(lv===undefined)v=(bv!==undefined&&JJ(rv)===JJ(bv))?undefined:rv;
+   else if(rv===undefined)v=(bv!==undefined&&JJ(lv)===JJ(bv))?undefined:lv;
+   else v=mergeVal(bv,lv,rv,cp);
+   if(v!==undefined)o[k]=v}
+  if(path==='notes'&&r.x&&l.x!==r.x&&bb.x!==l.x&&bb.x!==r.x)MCONF.push({...r,id:nid(),ti:(r.ti||'')+' (نسخة من جهاز آخر)'});
+  return o}
+ if(typeof l==='number'&&typeof r==='number'){
+  if(path==='pk.a')return l+r-(typeof b==='number'?b:0);
+  if(path==='books.p'||path==='goals.a')return Math.max(l,r)}
+ return l}
+const noAtt=o=>{const c={...o};delete c.att;return c};
+function getBase(){try{const j=localStorage.getItem('lifeos_base');return j?JSON.parse(j):null}catch(e){return null}}
+function setBase(sn){try{localStorage.setItem('lifeos_base',JSON.stringify(noAtt(sn)))}catch(e){}}
+function syncIn(d){
+ if(!d||!d.s){save();return}
+ let R;try{R=JSON.parse(d.s)}catch(e){return}
+ const L=snapS(),B=getBase(),jr=JJ(noAtt(R)),jl=JJ(noAtt(L));
+ const ra=R.att||{},la=S.att||{},missL=Object.keys(ra).filter(k=>!(k in la)),missR=Object.keys(la).filter(k=>!(k in ra));
+ const attSync=()=>{if(missL.length){SY.applying=1;try{S.att=Object.assign({},ra,S.att);save()}finally{SY.applying=0}}if(missR.length)syncSoon()};
+ if(jr===jl){setBase(L);attSync();setSt('ok');return}
+ if(!B){if(d.ts>(S.ts||0))pull(d);else if((S.ts||0)>d.ts)syncSoon();setSt('ok');return}
+ const jb=JJ(noAtt(B)),rc=jr!==jb,lc=jl!==jb;
+ if(!rc){if(lc)syncSoon();else attSync();setSt('ok');return}
+ if(!lc){pull(d);setSt('ok');return}
+ try{localStorage.setItem('lifeos2_pre_merge',JJ(noAtt(L)))}catch(e){}
+ MCONF=[];const M=mergeVal(noAtt(B),noAtt(L),noAtt(R),'');if(MCONF.length)M.notes=[...(M.notes||[]),...MCONF];
+ SY.applying=1;try{for(const k of Object.keys(M))S[k]=M[k];S.att=Object.assign({},ra,S.att);S.sleep=S.sleep||[];S.ts=Math.max(S.ts||0,d.ts||0)+1;save()}finally{SY.applying=0}
+ syncSoon();setSt('ok');
+ const a=document.activeElement;toast('تم دمج تعديلات من جهاز آخر مع تعديلاتك'+(MCONF.length?' · في نسخة متعارضة':''));
+ if(!(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)))go(S.tab)}
+/* auto backups (IndexedDB) */
+const IDBP=()=>new Promise((ok,no)=>{const r=indexedDB.open('lifeos-bk',1);r.onupgradeneeded=()=>r.result.createObjectStore('b',{keyPath:'d'});r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});
+const idbDo=(mode,fn)=>IDBP().then(db=>new Promise((ok,no)=>{const t=db.transaction('b',mode),q=fn(t.objectStore('b'));t.oncomplete=()=>ok(q&&q.result);t.onerror=()=>no(t.error)}));
+const bkAll=()=>idbDo('readonly',s=>s.getAll()).then(a=>a.sort((x,y)=>y.d.localeCompare(x.d)));
+async function bkAuto(){try{const all=await bkAll(),t=iso(0);await idbDo('readwrite',s=>s.put({d:t,ts:Date.now(),n:S.notes.length,s:JJ(snapS())}));for(const x of all.filter(x=>x.d!==t).slice(6))await idbDo('readwrite',s=>s.delete(x.d))}catch(e){}}
+async function bkFill(){const el=$('#bkl');if(!el)return;try{const a=await bkAll();el.innerHTML=a.length?a.map(x=>`<div class="bkr"><span>${x.d} · ${N(x.n||0)} ملاحظة · ${N(Math.round(x.s.length/1024))} ك.ب</span><span><button class="chip" data-zbr="${x.d}">استرجاع</button><button class="chip" data-zbd="${x.d}">تنزيل</button></span></div>`).join(''):'<div class="empty" style="padding:6px">لسه مفيش نسخ. أول نسخة بتتعمل تلقائي أول ما تفتح التطبيق بعد شوية.</div>'}catch(e){el.innerHTML='<div class="empty" style="padding:6px">المتصفح مش بيدعم النسخ التلقائي</div>'}}
+function bakX(){setTimeout(bkFill,0);return `<h2>نسخ احتياطية تلقائية (آخر 7 أيام)</h2><div class="card"><div id="bkl"><div class="empty" style="padding:6px">جاري التحميل…</div></div></div><h2>الجولة التعريفية</h2><div class="card"><button class="pb" data-ztour="1" style="width:100%;background:var(--surf2);color:var(--tx)">عرض الجولة من جديد</button></div>`}
+function bak(){return bak0()+bakX()}
+/* onboarding */
+const WEL='# أهلاً في Life OS \u{1F44B}\n\n> [!tip] ابدأ من هنا\n> كل حاجة هنا ملاحظة بتكتبها بـ Markdown، وتربطها ببعض.\n\n## جرّب دلوقتي\n- [ ] اكتب [[ واختار ملاحظة لربطها\n- [ ] اكتب #وسم عشان تصنّف\n- [ ] افتح تبويب «رسم بياني» وشوف الروابط\n- [ ] ضيف مهمة من تبويب المهام\n\n#أفكار';
+function startEmpty(){S.notes=[{id:nid(),ti:'ابدأ من هنا',x:WEL,f:'',m:Date.now(),t:''}];S.tasks=[];S.habits=[];S.goals=[];S.books=[];S.journal=[];S.log=[];S.sleep=[];S.pk.forEach(p=>{p.a=0});S.cv.cards=[];S.cv.edges=[];S.cvs=[];S.pj=[];S.open=null;save()}
+function tour(){
+ if($('.tour'))return;const d=document.createElement('div');d.className='tour';let st=0;
+ const sl=[
+  `<div class="te">✅</div><h2>أهلاً في Life OS</h2><p>نظام إنتاجية عربي بسيط: مهامك وعاداتك وملاحظاتك وفلوسك في مكان واحد.</p><p>بياناتك ملكك: بتتخزن على جهازك، ولو عايز على Google Drive الخاص بيك. مفيش سيرفر بيقرأها.</p>`,
+  `<h2>إيه في التطبيق؟</h2><div class="tl"><b>\u{1F3E0} الرئيسية</b> ملخص يومك<br><b>☑ المهام</b> مهام اليوم والأسبوع<br><b>✎ الأفكار</b> ملاحظات زي Obsidian + رسم بياني + كانفاس + مشاريع<br><b>◍ المالية</b> مساحات فلوسك وأهدافها<br><b>☰ المزيد</b> عادات، نوم، أهداف، قراءة، يوميات، نسخ احتياطية</div>`,
+  `<h2>تبدأ إزاي؟</h2><button class="pb" data-ob="empty">ابدأ فاضي (أنصح بيه)</button><button class="pb alt" data-ob="demo">جرّب ببيانات تجريبية</button><button class="pb alt" data-ob="import">\u{1F4E5} عندي ملفات Obsidian</button>${window.claude&&claude.use?'':'<button class="pb alt" data-ob="google">\u{1F510} اربط Google Drive للمزامنة</button>'}`];
+ const draw=()=>{d.innerHTML=`<div class="tc">${sl[st]}<div class="tdots">${sl.map((_,i)=>`<i class="${i===st?'on':''}"></i>`).join('')}</div>${st<sl.length-1?'<div class="trow"><button class="pb" data-ob="next">التالي</button><button class="chip" data-ob="skip">تخطّى</button></div>':''}</div>`};
+ d.onclick=e=>{const b=e.target.closest('[data-ob]');if(!b)return;const a=b.dataset.ob,fin=()=>{try{localStorage.setItem('lifeos_ob','1')}catch(x){}d.remove()};
+  if(a==='next'){st++;draw()}else if(a==='skip'){fin()}
+  else if(a==='demo'){fin()}
+  else if(a==='empty'){startEmpty();fin();go(5);toast('تم. ابدأ من ملاحظة «ابدأ من هنا» في الأفكار')}
+  else if(a==='import'){fin();S.isub=0;go(3);setTimeout(()=>pick({multiple:true},obsImport),50)}
+  else if(a==='google'){fin();S.sub=5;go(4);toast('اضغط «متابعة بحساب Google»')}};
+ draw();document.body.appendChild(d)}
+document.addEventListener('click',async e=>{
+ const t=e.target.closest('[data-zbr],[data-zbd],[data-ztour]');if(!t)return;const D=t.dataset;
+ if(D.ztour!==undefined)return tour();
+ let rec;try{rec=(await bkAll()).find(x=>x.d===(D.zbr||D.zbd))}catch(er){}if(!rec)return toast('النسخة مش موجودة');
+ if(D.zbd)return zdl('life-os-auto-'+rec.d+'.json',rec.s,'application/json');
+ if(!confirm('هيتم استرجاع نسخة '+rec.d+'. بياناتك الحالية هتتحفظ كنسخة قبل الاسترجاع. متابعة؟'))return;
+ try{localStorage.setItem('lifeos2_pre_restore',JSON.stringify(noAtt(snapS())))}catch(er){}
+ try{Object.assign(S,JSON.parse(rec.s));S.att=S.att||{};save();toast('تم الاسترجاع');go(S.tab)}catch(er){toast('فشل الاسترجاع')}});
+setTimeout(bkAuto,4000);document.addEventListener('visibilitychange',()=>{if(document.hidden)bkAuto()});
+setTimeout(()=>{try{if(FRESH&&!localStorage.getItem('lifeos_ob'))return;const hasData=S.notes.length+S.tasks.length+S.habits.length>3,t=iso(0);if(!gOn()&&!(window.claude&&claude.use)&&hasData&&(!S.lb||Date.now()-S.lb>14*864e5)&&localStorage.getItem('lifeos_rem')!==t){localStorage.setItem('lifeos_rem',t);toast('\u{1F4BE} معملتش نسخة من فترة. المزيد ← النسخ أو اربط Google Drive')}}catch(e){}},7000);
+if(FRESH)setTimeout(tour,500);
+
+/* ---- المزامنة بين الأجهزة (db خاص بالمستخدم) ---- */
+const LOC=['sp','tk','td','cc','fo','cf','tab','sub','wo','tw','pin','notif','hide','q','tag','sel','open','edit','isub','mood','mode','sign','lk','ce','sc','rp','ca','cb','fy','lb','ts'];
+const SYM={off:'المزامنة تشتغل لما تفتح التطبيق من رابط claude.ai وانت مسجّل دخول بنفس الحساب على الجهازين',wait:'جارٍ الاتصال بالمزامنة…',ok:'متزامن مع حسابك ✓',busy:'جارٍ المزامنة…',err:'تعذّرت المزامنة، هتتعاد تلقائيًا',big:'حجم البيانات كبير على المزامنة. صدّر نسخة احتياطية وقلل الملاحظات الكبيرة',login:'اضغط هنا لتسجيل الدخول بحساب Google وتكمل المزامنة',offl:'أنت أوفلاين. تعديلاتك محفوظة على الجهاز وهتتزامن أول ما يرجع النت'};
+function setSt(st){SY.st=st;const b=$('#sy');if(!b)return;b.textContent=st==='busy'?'⟳':st==='err'||st==='big'||st==='login'?'⚠':'☁';b.style.opacity=(st==='off'||st==='offl')?.45:1;b.style.color=st==='ok'?'var(--ac)':(st==='err'||st==='big'||st==='login')?'var(--warn)':''}
+$('#sy').onclick=()=>{if(SY.st==='login'&&SY.login)return SY.login();toast(SYM[SY.st])};setSt('off');
+const snapS=()=>{const o={};for(const k in S)if(!LOC.includes(k))o[k]=S[k];return o};
+function syncSoon(){if(!SY.ref||SY.applying)return;clearTimeout(SY.t);SY.t=setTimeout(push,1500)}
+async function push(){if(!SY.ref)return;if(SY.busy){SY.dirty=1;return}SY.busy=1;setSt('busy');
+ try{const sn=snapS(),j=JSON.stringify(sn);if(!SY.g&&j.length>200000){setSt('big');return}await SY.ref.set({v:1,ts:S.ts||Date.now(),s:j});setBase(sn);setSt('ok')}
+ catch(e){setSt(e&&e.code==='auth'?'login':e&&e.code==='quota_exceeded'||e&&e.code==='invalid_argument'?'big':(navigator.onLine?'err':'offl'));if(!(e&&(e.code==='quota_exceeded'||e.code==='invalid_argument'||e.code==='auth')))setTimeout(syncSoon,15000)}
+ finally{SY.busy=0;if(SY.dirty){SY.dirty=0;push()}}}
+function pull(d){let r;try{r=JSON.parse(d.s)}catch(e){return}
+ if(!S.ts){try{localStorage.setItem('lifeos2_pre_sync',JSON.stringify(S))}catch(e){}}
+ SY.applying=1;try{const la0=S.att;for(const k of Object.keys(r))S[k]=r[k];if(la0)S.att=Object.assign({},la0,r.att||{});S.sleep=S.sleep||[];S.ts=d.ts;save();setBase(r)}finally{SY.applying=0}
+ const a=document.activeElement;if(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName))toast('تم تحديث بياناتك من جهاز آخر');else go(S.tab)}
+
+/* ---- المزامنة عبر Google Drive (مساحة التطبيق المخفية) ---- */
+const GCLIENT='341954609376-upuf4kl93ems6rfp6htlkt4mgj4t3pga.apps.googleusercontent.com';
+const gid=()=>GCLIENT||(()=>{try{return localStorage.getItem('lifeos_gid')||''}catch(e){return ''}})();
+const gOn=()=>{try{return localStorage.getItem('lifeos_g')==='1'&&!!gid()}catch(e){return false}};
+let gTok=null,gExp=0,gClient=null,gWait=null,gFileId=null;
+function loadGsi(){return new Promise((res,rej)=>{if(window.google&&google.accounts&&google.accounts.oauth2)return res();const t=document.createElement('script');t.src='https://accounts.google.com/gsi/client';t.async=true;t.onload=()=>res();t.onerror=()=>rej({code:'net'});document.head.appendChild(t)})}
+function gToken(interactive){return new Promise((res,rej)=>{if(!(window.google&&google.accounts&&google.accounts.oauth2))return loadGsi().then(()=>gToken(interactive).then(res,rej),rej);
+ gWait={res,rej};if(!gClient)gClient=google.accounts.oauth2.initTokenClient({client_id:gid(),scope:'https://www.googleapis.com/auth/drive.appdata',
+  callback:r=>{if(r&&r.access_token){gTok=r.access_token;gExp=Date.now()+(Math.max(60,(r.expires_in||3600)-60))*1000;gWait&&gWait.res(gTok)}else gWait&&gWait.rej({code:'auth'})},
+  error_callback:e=>gWait&&gWait.rej({code:'auth',e})});
+ try{gClient.requestAccessToken({prompt:interactive?'select_account':''})}catch(e){rej({code:'auth'})}})}
+const gAuth=()=>gTok&&Date.now()<gExp?Promise.resolve(gTok):gToken(false);
+async function gfetch(url,o={}){const t=await gAuth();const r=await fetch(url,{...o,headers:{...(o.headers||{}),Authorization:'Bearer '+t}});if(r.status===401||r.status===403){gTok=null;throw{code:'auth'}}if(!r.ok)throw{code:'unavailable'};return r}
+async function gFind(){if(gFileId)return gFileId;const r=await gfetch('https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&orderBy=createdTime&pageSize=1&fields=files(id)&q='+encodeURIComponent("name='lifeos.json'"));const j=await r.json();gFileId=j.files&&j.files[0]?j.files[0].id:null;return gFileId}
+async function gGet(){const id=await gFind();if(!id)return null;const r=await gfetch('https://www.googleapis.com/drive/v3/files/'+id+'?alt=media');return await r.json()}
+async function gSet(d){const id=await gFind();if(id){await gfetch('https://www.googleapis.com/upload/drive/v3/files/'+id+'?uploadType=media',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)})}
+ else{const b='lifeosb',body='--'+b+'\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n'+JSON.stringify({name:'lifeos.json',parents:['appDataFolder']})+'\r\n--'+b+'\r\nContent-Type: application/json\r\n\r\n'+JSON.stringify(d)+'\r\n--'+b+'--';
+  const r=await gfetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id',{method:'POST',headers:{'Content-Type':'multipart/related; boundary='+b},body});gFileId=(await r.json()).id}}
+function startG(){SY.ref={set:gSet};SY.g=1;
+ const poll=async()=>{if(SY.busy||SY.applying)return;try{onRemote(await gGet())}catch(e){setSt(e&&e.code==='auth'?'login':(navigator.onLine?'err':'offl'))}};SY.poll=poll;
+ SY.login=()=>gToken(true).then(()=>{setSt('ok');poll();syncSoon()},()=>toast('لم يتم تسجيل الدخول'));
+ setSt('wait');poll();setInterval(()=>{if(!document.hidden)poll()},30000);
+ addEventListener('online',()=>{poll();syncSoon()});addEventListener('offline',()=>setSt('offl'));document.addEventListener('visibilitychange',()=>{if(!document.hidden)poll()});return true}
+function onRemote(d){syncIn(d)}
+const XS=()=>{try{return JSON.parse(localStorage.getItem('lifeos_sync')||'null')}catch(e){return null}};
+let xpoll=null;
+function startX(c){if(!c||!c.url||!c.key)return false;const base=c.url.replace(/\/+$/,'')+'/lifeos/'+encodeURIComponent(c.key)+'.json';
+ SY.ref={set:async d=>{const r=await fetch(base,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});if(!r.ok)throw{code:'unavailable'}}};SY.x=1;
+ const poll=async()=>{if(SY.busy||SY.applying)return;try{const r=await fetch(base,{cache:'no-store'});if(!r.ok)throw 0;onRemote(await r.json())}catch(e){setSt(navigator.onLine?'err':'offl')}};
+ poll();clearInterval(xpoll);xpoll=setInterval(()=>{if(!document.hidden)poll()},20000);
+ addEventListener('online',()=>{poll();syncSoon()});addEventListener('offline',()=>setSt('offl'));document.addEventListener('visibilitychange',()=>{if(!document.hidden)poll()});return true}
+(async()=>{let ok=false;try{if(window.claude&&claude.use){setSt('wait');
+ const[db,user]=await Promise.all([claude.use('db'),claude.use('user')]);
+ if(db&&user){const id=await user.id();if(id){SY.ref=db.collection('data/users/'+id).doc('lifeos');ok=true;setSt('ok');
+  SY.ref.onSnapshot(sn=>{onRemote(sn.exists?sn.data():null)},()=>setSt('err'))}}}}catch(e){}
+ if(!ok&&gOn()){startG();return}
+ if(!ok){const c=XS();if(!(c&&startX(c)))setSt('off')}})();
+let gTap=0;document.addEventListener('pointerdown',()=>{if(SY.st==='login'&&SY.login&&Date.now()-gTap>8000){gTap=Date.now();SY.login()}});
+if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol))addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
+/* ===== addon6: new IA (today / stats / settings) ===== */
+const IC6={home:'<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',today:'<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M8.5 14l2.5 2.5 4.5-5"/>',stats:'<path d="M4 19V10M10 19V5M16 19v-7M22 19H2"/>',idea:'<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/>',gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',back:'<path d="M9 6l6 6-6 6" transform="translate(0 0)"/>'};
+const ic6=(k,s=22)=>`<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC6[k]}</svg>`;
+let BACK6=[],NOPUSH6=0;const MAIN6=[5,6,7,3];
+(function(){
+ const m=$('main');['s6','s7','s8'].forEach(id=>{const s=document.createElement('section');s.id=id;m.appendChild(s)});
+ $('nav').innerHTML=[[5,'home','الرئيسية'],[6,'today','اليوم'],[7,'stats','الإحصائيات'],[3,'idea','الأفكار']].map(([i,k,t],j)=>`<button class="${j?'':'on'}" data-i="${i}"><span>${ic6(k)}</span>${t}</button>`).join('');
+ $$('nav button').forEach(b=>b.onclick=()=>go(+b.dataset.i));
+ titles[0]='المالية';titles[1]='تقرير الإنجاز';titles[4]='التفاصيل';titles.push('اليوم','الإحصائيات','الإعدادات');
+ subs[4]='العادات والنوم والأهداف والقراءة واليوميات';subs.push('مهامك وعاداتك ونومك ويوميتك','أرقامك ورسوماتك في مكان واحد','النسخ والمزامنة وإدارة بياناتك');
+ const h1=$('#ttl'),row=document.createElement('div');row.className='ttr';h1.parentNode.insertBefore(row,h1);
+ row.innerHTML=`<button class="ib" id="bkb" aria-label="رجوع" style="display:none">${ic6('back',20)}</button>`;row.appendChild(h1);
+ $('#sub').insertAdjacentHTML('afterend','<span id="spill" class="spill" style="display:none"></span>');
+ $('#th').insertAdjacentHTML('afterend',`<button class="ib" id="gr" aria-label="الإعدادات">${ic6('gear',20)}</button>`);
+ $('#nb').style.display='none';$('#lk').style.display='none';
+ $('#gr').onclick=()=>go(8);
+ $('#bkb').onclick=()=>{const t=BACK6.length?BACK6.pop():5;NOPUSH6=1;go(t)};
+})();
+const go0=go;
+go=function(i){
+ if(!NOPUSH6&&S.tab!==i&&!MAIN6.includes(i))BACK6.push(S.tab);NOPUSH6=0;
+ if(MAIN6.includes(i))BACK6=[];
+ go0(i);
+ const hl={0:7,1:7,2:6,4:8}[i]??i;
+ $$('nav button').forEach(b=>b.classList.toggle('on',+b.dataset.i===hl));
+ $('#bkb').style.display=MAIN6.includes(i)?'none':'';$('#gr').classList.toggle('on',i===8);
+ const m=$('main');if(m)m.scrollTop=0;window.scrollTo(0,0);
+};
+R.push(null,null,null);
+/* sync pill */
+const setSt0=setSt;
+setSt=function(st){if(st==='ok')SY.last=Date.now();setSt0(st);pill6()};
+function pill6(){const p=$('#spill');if(!p)return;const st=SY.st;if(!st||st==='off'||st==='offl'){p.style.display='none';return}
+ const ago=SY.last?Math.max(0,Math.round((Date.now()-SY.last)/60000)):0;
+ p.style.display='';p.className='spill'+(st==='ok'||st==='busy'?'':' w');
+ p.innerHTML='<i></i>'+(st==='busy'?'جاري المزامنة…':st==='ok'?(ago<1?'متزامن الآن':'متزامن · من '+N(ago)+' د'):'مشكلة في المزامنة')}
+setInterval(pill6,30000);
+/* helpers */
+const mn6=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:null;
+const dts6=(n,off=0)=>Array.from({length:n},(_,j)=>iso(off+n-1-j));
+const hRate6=d=>S.habits.length?S.habits.filter(h=>h.d.includes(d)).length/S.habits.length*100:0;
+const hFirst6=()=>{let m='';S.habits.forEach(h=>h.d.forEach(d=>{if(!m||d<m)m=d}));return m};
+const comp6=ds=>{const f=hFirst6(),tr=f?ds.filter(d=>d>=f):[],set=new Set(ds);
+ const h=tr.length&&S.habits.length?mn6(tr.map(hRate6)):null;
+ const sl=S.sleep.filter(e=>set.has(e.d)).map(e=>e.h),sa=mn6(sl);
+ const ts=S.tasks.filter(t=>set.has(t.dt)),td=ts.filter(t=>t.d).length;
+ return{h,tr,sa,sn:sl.length,ge:sl.length?sl.filter(v=>v>=7).length/sl.length*100:null,s:sa==null?null:Math.min(100,sa/8*100),t:ts.length?td/ts.length*100:null,tn:ts.length}};
+const score6=c=>{const a=[c.h,c.s,c.t].filter(x=>x!=null);return a.length?Math.round(mn6(a)):null};
+const sgn6=(d,unit='٪',inv)=>{if(d==null||!isFinite(d)||Math.round(d)===0)return'';const up=d>0;return`<span class="dl ${(up!==!!inv)?'up':'dn'}">${up?'▲':'▼'} ${N(Math.abs(Math.round(d)))}${unit}</span>`};
+function bars6(v,o={}){const w=300,hh=o.h||70,n=v.length,bw=w/n,mx=o.max||Math.max(1,...v.filter(x=>x!=null));let r='';
+ v.forEach((x,i)=>{const hv=x==null?2:Math.max(x/mx*hh,2);r+=`<rect x="${(i*bw+1.5).toFixed(1)}" y="${(hh-hv).toFixed(1)}" width="${Math.max(bw-3,1).toFixed(1)}" height="${hv.toFixed(1)}" rx="2" fill="${x==null?'var(--surf2)':(o.col||'var(--ac)')}" opacity="${x!=null&&o.fade&&x<o.fade?.5:1}"/>`});
+ const g=o.goal!=null?`<line x1="0" x2="${w}" y1="${(hh-o.goal/mx*hh).toFixed(1)}" y2="${(hh-o.goal/mx*hh).toFixed(1)}" stroke="var(--warn)" stroke-opacity=".7" stroke-dasharray="3 4"/>`:'';
+ return`<svg viewBox="0 0 ${w} ${hh}" width="100%" height="${hh}" preserveAspectRatio="none" role="img" aria-label="${o.al||'رسم بياني'}">${g}${r}</svg>`}
+const pb6=(l,p,c,t)=>`<div class="pb6"><span>${esc(l)}</span><div><i style="width:${Math.max(0,Math.min(100,p))}%;background:${c||'var(--ac)'}"></i></div><em>${t||P(p)}</em></div>`;
+function buckets6(n){if(n<=30)return dts6(n).map(d=>[d]);
+ if(n===90)return Array.from({length:13},(_,k)=>dts6(7,(12-k)*7));
+ const now=new Date();return Array.from({length:12},(_,k)=>{const mo=new Date(now.getFullYear(),now.getMonth()-(11-k),1),e=new Date(mo.getFullYear(),mo.getMonth()+1,0),T=iso(0),o=[];
+  for(let d=new Date(mo);d<=e;d.setDate(d.getDate()+1)){const s=d.toLocaleDateString('en-CA');if(s<=T)o.push(s)}return o})}
+function insights6(n){const ds=dts6(n),f=hFirst6(),tr=f?ds.filter(d=>d>=f):[],out=[],c=comp6(ds);
+ if(tr.length>=14){const g=Array.from({length:7},()=>[]);tr.forEach(d=>g[new Date(d+'T12:00').getDay()].push(hRate6(d)));
+  const av=g.map((a,i)=>[i,mn6(a)]).filter(x=>x[1]!=null).sort((a,b)=>b[1]-a[1]);
+  if(av.length>=3&&av[0][1]-av[av.length-1][1]>=15){const nm=i=>new Date(2024,0,7+i,12).toLocaleDateString('ar-EG',{weekday:'long'});out.push(`أحسن يوم للعادات عندك <b>${nm(av[0][0])}</b>، وأضعف يوم <b>${nm(av[av.length-1][0])}</b>.`)}}
+ if(tr.length&&S.habits.length){const hs=S.habits.map(h=>[h.n,h.d.filter(d=>d>=f&&ds.includes(d)).length/tr.length*100]).sort((a,b)=>a[1]-b[1]);
+  if(hs[0][1]<50)out.push(`عادة <b>${esc(hs[0][0])}</b> هي الأضعف (${P(hs[0][1])}). جرّب تخليها أصغر، ١٠ دقايق بس.`)}
+ if(c.sa!=null&&c.sa<7.5)out.push(`نومك أقل من الهدف بـ <b>${N(Math.round((8-c.sa)*60))} دقيقة</b> في المتوسط.`);
+ return out}
+/* ===== Today tab ===== */
+function today6(){
+ const T=iso(0),all=S.tasks.map((t,i)=>[i,t]);
+ const L=all.filter(([i,t])=>t.d?t.dd===T:t.dt<=T).sort((x,y)=>(x[1].d-y[1].d)||x[1].dt.localeCompare(y[1].dt)||x[1].tm.localeCompare(y[1].tm));
+ const dn=L.filter(([i,t])=>t.d).length;
+ const row=([i,t])=>{const late=!t.d&&t.dt<T;return`<div class="task ${t.d?'d':''}"${late?' style="border-color:#E5534B"':''}><input type="checkbox" data-t="${i}" ${t.d?'checked':''} aria-label="تم"><span class="x">${esc(t.t)}${late?` <small style="color:#E5534B;font-weight:600">متأخرة · ${fd(t.dt)}</small>`:''}</span>${t.d?'':`<button data-r="${i}" aria-label="حذف">✕</button>`}</div>`};
+ const days=[6,5,4,3,2,1,0],dnm=k=>new Date(iso(k)+'T12:00').toLocaleDateString('ar-EG',{weekday:'narrow'});
+ const hd=S.habits.map((h,i)=>`<div class="hr6"><div><b>${esc(h.n)}</b><small>🔥 ${N(streak(h))} يوم</small></div><div class="dots6">${days.map(k=>`<button class="dt6 ${h.d.includes(iso(k))?'on':''} ${k===0?'td':''}" data-hd="${i}:${k}" aria-label="${dnm(k)}">${k===0?'':''}</button>`).join('')}</div></div>`).join('');
+ const hdone=S.habits.filter(h=>h.d.includes(T)).length;
+ const sl=S.sleep.find(e=>e.d===T),jt=S.journal.filter(j=>j.d===T);
+ const lab=`<div class="dlab6">${days.map(k=>`<span>${dnm(k)}</span>`).join('')}</div>`;
+ $('#s6').innerHTML=`<div class="st6">
+ <div class="sc6"><h3>المهام</h3><em>${N(dn)} / ${N(L.length)}</em></div>
+ <div class="add" style="margin-bottom:8px"><input type="text" id="q6t" placeholder="مهمة جديدة لليوم…"><button class="pb" data-z6="ta">إضافة</button></div>
+ ${L.length?L.map(row).join(''):'<div class="empty" style="padding:10px 0">لا مهام لليوم. أضف أول مهمة 👆</div>'}
+ <a class="lk6" data-zn="tsk">لوحة الأسبوع وكل المهام ←</a>
+ <div class="sc6"><h3>العادات</h3><em>${N(hdone)} / ${N(S.habits.length)} النهارده</em></div>
+ <div class="card">${S.habits.length?lab+hd:'<div class="empty" style="padding:10px 0">لسه مفيش عادات</div>'}<a class="lk6" data-zn="hab">إضافة وإدارة العادات ←</a></div>
+ <div class="sc6"><h3>النوم</h3><em>${sl?N(sl.h)+' س':'—'}</em></div>
+ <div class="card"><div class="add"><input type="number" id="z6s" step="0.5" min="0" max="24" inputmode="decimal" placeholder="نمت كام ساعة؟ مثل ٧٫٥" value="${sl?sl.h:''}"><button class="pb" data-z6="sl">${sl?'تحديث':'حفظ'}</button></div><small class="mu6">${sl?'مسجّل النهارده · الهدف ٨ ساعات':'لسه ماسجلتش نوم النهارده'}</small></div>
+ <div class="sc6"><h3>اليومية</h3><em>${jt.length?'✓ كتبت النهارده':'مدونة النهارده'}</em></div>
+ <div class="card"><small class="mu6">حاسس بإيه النهارده؟</small><div class="chips" style="margin:8px 0">${MO.map(m=>`<button class="chip ${S.mood===m?'on':''}" data-zm="${m}" style="font-size:20px" aria-label="المزاج">${m}</button>`).join('')}</div><textarea id="z6x" placeholder="يومك في سطرين…"></textarea><button class="pb" data-z6="jr" style="width:100%;margin-top:8px">حفظ اليومية</button><a class="lk6" data-zn="jour">كل اليوميات ←</a></div></div>`}
+/* ===== Stats tab ===== */
+function stats6(){
+ const n=S.sp||30,ds=dts6(n),pds=dts6(n,n),c=comp6(ds),p=comp6(pds),sc=score6(c),ps=score6(p);
+ const lab=n===7?'أسبوعك':n===30?'شهرك':n===90?'٣ شهور':'سنتك',left=n<=30?'من '+N(n)+' يوم':n===90?'من ١٣ أسبوع':'من ١٢ شهر';
+ const bk=buckets6(n),f=hFirst6();
+ const hv=bk.map(b=>{const t=f?b.filter(d=>d>=f):[];return t.length&&S.habits.length?mn6(t.map(hRate6)):null});
+ const sv=bk.map(b=>{const s=new Set(b),a=S.sleep.filter(e=>s.has(e.d)).map(e=>e.h);return a.length?mn6(a):null});
+ const tv=bk.map(b=>{const s=new Set(b),a=S.tasks.filter(t=>s.has(t.dt));return a.length?a.filter(t=>t.d).length/a.length*100:null});
+ const fv=bk.map(b=>spend(b[0],b[b.length-1]));
+ const sp=spend(ds[0],ds[ds.length-1]),pp=spend(pds[0],pds[pds.length-1]);
+ const byP={};S.log.forEach(l=>{if(l.dk&&l.dk>=ds[0]&&l.dk<=ds[ds.length-1]&&!l.g&&l.v<0&&S.pk[l.i]&&S.pk[l.i].daily){const k=l.c||S.pk[l.i].n;byP[k]=(byP[k]||0)-l.v}});
+ const tp=Object.entries(byP).sort((a,b)=>b[1]-a[1]).slice(0,3),tmax=tp.length?tp[0][1]:1;
+ const set=new Set(ds),trd=f?ds.filter(d=>d>=f):[];
+ const hab=S.habits.map(h=>[h.n,trd.length?h.d.filter(d=>set.has(d)&&d>=f).length/trd.length*100:0]).sort((a,b)=>b[1]-a[1]).slice(0,4);
+ const gl=[...S.goals.map(g=>[g.t,g.g?g.a/g.g*100:0]),...S.books.map(b=>[b.t,b.n?b.p/b.n*100:0]),...S.pk.filter(x=>x.goal).map(x=>[x.n,x.g?x.a/x.g*100:0])].slice(0,5);
+ const ins=insights6(n),empty=!S.habits.length&&!S.sleep.length&&!S.tasks.length;
+ const cl=['var(--ac)','#60a5fa','#f87171','#a78bfa'];
+ const mini=(l,v,u)=>`<div class="mi6"><small>${l}</small><b>${v==null?'—':N(Math.round(v))+u}</b></div>`;
+ const ring6=sc==null?'<div class="rg6">—</div>':`<div class="ring" style="width:76px;height:76px;flex:none">${ring(sc,'var(--ac)',76,9)}<b>${N(sc)}</b></div>`;
+ $('#s7').innerHTML=`<div class="st6">
+ <div class="seg4">${[[7,'أسبوع'],[30,'شهر'],[90,'٣ شهور'],[365,'سنة']].map(([k,t])=>`<button class="${n===k?'on':''}" data-zp="${k}">${t}</button>`).join('')}</div>
+ ${empty?'<div class="card"><div class="empty">سجّل مهام أو عادات أو نوم كام يوم، وهتظهر إحصائياتك هنا 📊</div></div>':''}
+ <div class="card"><div class="ringwrap">${ring6}<p><strong>درجة ${lab} ${sc!=null&&ps!=null?sgn6(sc-ps,' نقطة'):''}</strong><br>${sc==null?'محتاجين بيانات أكتر':ps==null?'ده أول فترة ليها بيانات':sc>=ps?'أحسن من الفترة اللي فاتت 👏':'أقل من الفترة اللي فاتت'}</p></div>
+ <div class="mini6">${mini('العادات',c.h,'٪')}${mini('النوم',c.s,'')}${mini('المهام',c.t,'٪')}</div><small class="mu6" style="display:block;margin-top:8px">الدرجة = متوسط العادات والنوم (من هدف ٨ ساعات) والمهام المنجزة.</small></div>
+ ${ins.length?`<div class="ins6">💡 ${ins.slice(0,2).join('<br>')}</div>`:''}
+ <div class="grid6">
+ <div class="card cd6"><h4>العادات <a data-zn="hab">التفاصيل ←</a></h4><div class="kp6"><div>المتوسط<b>${c.h==null?'—':P(c.h)}</b>${c.h!=null&&p.h!=null?sgn6(c.h-p.h):''}</div><div>أيام التتبع<b>${N(c.tr.length)}</b></div><div>عاداتك<b>${N(S.habits.length)}</b></div></div>${bars6(hv,{max:100,goal:c.h!=null?c.h:undefined,al:'اتجاه العادات'})}<div class="ax6"><span>اليوم</span><span>${left}</span></div>${c.tr.length&&c.tr.length<n?`<small class="mu6">بدأت التتبع من ${N(c.tr.length)} يوم، الأيام قبل كده مش محسوبة.</small>`:''}${hab.map((h,i)=>pb6(h[0],h[1],cl[i])).join('')}</div>
+ <div class="card cd6"><h4>النوم <a data-zn="slp">التفاصيل ←</a></h4>${c.sn?`<div class="kp6"><div>المتوسط<b>${N(c.sa.toFixed(1))} س</b>${sgn6((c.sa-8)*60,' د',0).replace(/ ▲| ▼/,m=>m)}</div><div>ليالي ٧ س+<b>${P(c.ge)}</b></div><div>سجّلت<b>${N(c.sn)} ليلة</b></div></div>${bars6(sv,{max:10,goal:8,col:'#a78bfa',al:'اتجاه النوم'})}<div class="ax6"><span>اليوم</span><span>${left}</span></div><small class="mu6">الخط المقطّع = هدف ٨ ساعات</small>`:'<div class="empty" style="padding:14px 0">مفيش نوم متسجل في الفترة دي</div>'}</div>
+ <div class="card cd6"><h4>المالية <a data-zn="fin">التفاصيل ←</a></h4>${sp||pp?`<div class="kp6"><div>المصروف<b>${M(sp)} ج.م</b>${pp?sgn6((sp-pp)/pp*100,'٪',1):''}</div><div>الفترة اللي فاتت<b>${M(pp)}</b></div></div>${bars6(fv,{col:'#fb923c',al:'المصروف'})}<div class="ax6"><span>اليوم</span><span>${left}</span></div>${tp.map(([k,v])=>pb6(k,v/tmax*100,'#fb923c',M(v))).join('')}`:'<div class="empty" style="padding:14px 0">مفيش مصروف يومي متسجل في الفترة دي</div>'}</div>
+ <div class="card cd6"><h4>المهام <a data-zn="tsk">التفاصيل ←</a></h4>${c.tn?`<div class="kp6"><div>نسبة الإنجاز<b>${P(c.t)}</b>${p.t!=null?sgn6(c.t-p.t):''}</div><div>إجمالي<b>${N(c.tn)}</b></div><div>متأخرة<b>${N(S.tasks.filter(t=>!t.d&&t.dt<iso(0)).length)}</b></div></div>${bars6(tv,{max:100,al:'إنجاز المهام'})}<div class="ax6"><span>اليوم</span><span>${left}</span></div>`:'<div class="empty" style="padding:14px 0">مفيش مهام في الفترة دي</div>'}</div>
+ ${gl.length?`<div class="card cd6"><h4>الأهداف والقراءة <a data-zn="goal">التفاصيل ←</a></h4>${gl.map((g,i)=>pb6(g[0],g[1],cl[i%4])).join('')}</div>`:''}
+ </div><a class="lk6" data-zn="rep" style="text-align:center">تقرير الإنجاز المفصّل ←</a></div>`}
+/* ===== Settings ===== */
+function settings6(){
+ const lk=(i,t,s,a)=>`<button class="lkr6" ${a}><span>${i}</span><div><b>${t}</b><small>${s}</small></div><em>‹</em></button>`;
+ $('#s8').innerHTML=`<div class="st6"><div class="sc6"><h3>إدارة البيانات</h3></div><div class="card" style="padding:4px 14px">
+ ${lk('💰','المالية','المحافظ والعمليات','data-zn="fin"')}${lk('🔁','العادات','إضافة وجدول الأسبوع','data-zn="hab"')}${lk('🌙','النوم','التسجيل والسجل','data-zn="slp"')}${lk('🎯','الأهداف','','data-zn="goal"')}${lk('📖','القراءة','الكتب والكورسات','data-zn="book"')}${lk('📝','اليوميات','الأرشيف والبحث','data-zn="jour"')}${lk('✅','المهام','لوحة الأسبوع','data-zn="tsk"')}${lk('📊','تقرير الإنجاز','تقرير مالي وإنجاز','data-zn="rep"')}</div>
+ <div class="sc6"><h3>التطبيق</h3></div><div class="card" style="padding:4px 14px">
+ ${lk('☁️','المزامنة','حالة الربط بين الأجهزة','data-zx="sy"')}${lk($('#nb').textContent,'الإشعارات','تذكيرات المهام','data-zx="nb"')}${lk($('#lk').textContent,'قفل التطبيق','رقم سري من ٤ أرقام','data-zx="lk"')}${lk('👋','الجولة التعريفية','','data-ztour="1"')}</div></div>`+bak()}
+R[6]=today6;R[7]=stats6;R[8]=settings6;
+/* home refinements */
+const home0=home;
+home=function(){home0();homeX6()};R[5]=home;
+function homeX6(){
+ const s=$('#s5');if(!s)return;
+ const c7=comp6(dts6(7)),p7=comp6(dts6(7,7)),late=S.tasks.filter(t=>!t.d&&t.dt<iso(0)).length,pks=s.querySelectorAll('.pk');
+ const add=(el,h)=>{if(el&&h)el.insertAdjacentHTML('beforeend','<div class="dl6">'+h+'</div>')};
+ if(pks[0]&&c7.h!=null&&p7.h!=null)add(pks[0],sgn6(c7.h-p7.h)+' <small>عن الأسبوع اللي فات</small>');
+ if(pks[1]&&c7.sa!=null)add(pks[1],sgn6((c7.sa-8)*60,' د')+' <small>عن الهدف</small>');
+ if(pks[2]&&late)add(pks[2],'<a data-zn="tsk">راجعها ←</a>');
+ const ins=insights6(30);if(ins.length)s.insertAdjacentHTML('afterbegin',`<div class="ins6">💡 ${ins[0]}</div>`);
+ const card=[...s.querySelectorAll('.card')].find(c=>c.textContent.includes('اتجاه العادات'));
+ if(card){const f=hFirst6(),ds=dts6(30),tr=f?ds.filter(d=>d>=f):[],v=ds.map(d=>f&&d>=f&&S.habits.length?hRate6(d):null),av=tr.length&&S.habits.length?mn6(tr.map(hRate6)):null;
+  card.innerHTML=`<div style="display:flex;justify-content:space-between"><b style="font-size:16px">اتجاه العادات ٣٠ يوم</b><span style="font-size:13px;color:var(--ac)">${av==null?'':'المتوسط '+P(av)}</span></div>${tr.length&&tr.length<30?`<small class="mu6">بدأت التتبع من ${N(tr.length)} يوم</small>`:''}<div style="margin-top:10px">${bars6(v,{max:100,goal:av!=null?av:undefined,al:'اتجاه العادات'})}</div><div class="ax6"><span>اليوم</span><span>من ٣٠ يوم</span></div>`}
+}
+/* handlers */
+document.addEventListener('click',e=>{
+ let t=e.target.closest('[data-zn]');
+ if(t){const k=t.dataset.zn;({fin:()=>go(0),rep:()=>go(1),tsk:()=>go(2),hab:()=>{S.sub=0;go(4)},slp:()=>{S.sub=1;go(4)},goal:()=>{S.sub=2;go(4)},book:()=>{S.sub=3;go(4)},jour:()=>{S.sub=4;go(4)}})[k]?.();return}
+ t=e.target.closest('[data-zp]');if(t){S.sp=+t.dataset.zp;save();stats6();return}
+ t=e.target.closest('[data-zx]');if(t){const b=$('#'+t.dataset.zx);if(b)b.click();setTimeout(()=>{if(S.tab===8)settings6()},300);return}
+ t=e.target.closest('[data-zm]');if(t){const x=$('#z6x')?$('#z6x').value:'';S.mood=t.dataset.zm;today6();if($('#z6x'))$('#z6x').value=x;return}
+ t=e.target.closest('[data-z6]');if(!t)return;const k=t.dataset.z6,T=iso(0);
+ if(k==='ta'){const v=$('#q6t').value.trim();if(!v)return toast('اكتب عنوان المهمة أولاً');const n=new Date();S.tasks.push({t:v,tm:'12:00',dt:T,d:0,dd:null,al:n.getHours()>=12?T:0});save();today6();toast('تمت إضافة المهمة')}
+ else if(k==='sl'){const v=+$('#z6s').value;if(!(v>0&&v<=24))return toast('اكتب عدد ساعات صحيح');const i=S.sleep.findIndex(x=>x.d===T);if(i>=0)S.sleep[i].h=v;else S.sleep.push({d:T,h:v});save();today6();toast('تم تسجيل النوم')}
+ else if(k==='jr'){const v=$('#z6x').value.trim();if(!v)return toast('اكتب يوميتك أولاً');S.journal.push({d:T,m:S.mood||'🙂',x:v});save();today6();toast('تم حفظ اليومية')}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='q6t'){e.preventDefault();const b=$('[data-z6="ta"]');b&&b.click()}});
+
+/* ===== addon7: quick expense ===== */
+const XC7=[['🍔','أكل'],['🚌','مواصلات'],['🛍','تسوق'],['🧾','فواتير'],['🎮','ترفيه'],['•','أخرى']];
+let XCAT7='أكل',XSRC7='x';
+const dpk7=()=>{let i=S.pk.findIndex(p=>p.daily);if(i<0){S.pk.push({n:'استخدام يومي',i:'☕',a:0,g:0,c:'#6D5BD0',daily:1});i=S.pk.length-1}return i};
+function expCard7(){
+ const di=S.pk.findIndex(p=>p.daily),dp=S.pk[di],T=iso(0);
+ return`<div class="card xq7"><div class="sc6" style="margin:0 0 8px"><h3>💸 سجّل مصروف</h3><em>صرفت النهارده ${M(spend(T,T))} ج.م</em></div>
+ <div class="add" style="flex-wrap:nowrap"><input type="number" id="x7a" inputmode="decimal" placeholder="المبلغ بالجنيه" style="flex:1;min-width:0"><button class="pb" data-z7="sv">سجّل</button></div>
+ <div class="chips" style="margin:8px 0 2px;flex-wrap:wrap">${XC7.map(([e,n])=>`<button class="chip ${XCAT7===n?'on':''}" data-z7c="${n}">${e} ${n}</button>`).join('')}</div>
+ <div class="xs7"><button class="${XSRC7==='x'?'on':''}" data-z7s="x">من جيبي</button><button class="${XSRC7==='p'?'on':''}" data-z7s="p">من رصيد «${dp?esc(dp.n):'اليومي'}»${dp?' · '+M(dp.a):''}</button></div>
+ <small class="mu6">${XSRC7==='x'?'بيتسجل مصروف من غير ما يتأثر أي رصيد في التطبيق.':'بيتخصم من الرصيد، ولو مش كفاية بيتسجل من جيبك.'}${S.tab===0?'':' للتحويل بين المساحات: الإعدادات ← المالية.'}</small></div>`}
+function inject7(sel,afterSel){const s=$(sel);if(!s)return;const old=s.querySelector('.xq7');if(old)old.remove();
+ const box=document.createElement('div');box.innerHTML=expCard7();const el=box.firstChild;
+ const a=afterSel?s.querySelector(afterSel):null;if(a)a.insertAdjacentElement('afterend',el);else (s.querySelector('.st6')||s).prepend(el)}
+const today70=today6;today6=function(){today70();inject7('#s6','.sc6')};R[6]=today6;
+const fin70=fin;fin=function(){fin70();inject7('#s0','[data-x]')};R[0]=fin;
+document.addEventListener('click',e=>{
+ let t=e.target.closest('[data-z7c]');if(t){XCAT7=t.dataset.z7c;const v=$('#x7a')?$('#x7a').value:'';go(S.tab);if($('#x7a')){$('#x7a').value=v;$('#x7a').focus()}return}
+ t=e.target.closest('[data-z7s]');if(t){XSRC7=t.dataset.z7s;const v=$('#x7a')?$('#x7a').value:'';go(S.tab);if($('#x7a'))$('#x7a').value=v;return}
+ t=e.target.closest('[data-z7="sv"]');if(!t)return;
+ const v=+$('#x7a').value;if(!(v>0))return toast('اكتب مبلغ أكبر من صفر');
+ const di=dpk7(),p=S.pk[di];let ext=1,msg='تم تسجيل المصروف';
+ if(XSRC7==='p'){if(v<=p.a){p.a-=v;ext=0}else msg='الرصيد مش كفاية، اتسجل من جيبك'}
+ const o={i:di,v:-v,dk:iso(0),c:XCAT7,t:new Date().toLocaleString('ar-EG',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})};if(ext)o.x=1;
+ S.log.push(o);save();go(S.tab);toast(msg+' · '+N(v)+' ج.م')});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='x7a'){e.preventDefault();const b=$('[data-z7="sv"]');b&&b.click()}});
+
+go(S.tab===undefined?5:S.tab);
+</script>
+</body>
+</html>
